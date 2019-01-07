@@ -10,7 +10,7 @@ template <class Solution ,class Problem>
 class Solver{
 
 public:
-    virtual Solution solve(Problem);
+    virtual Solution solve(Problem)=0;
 };
 
 

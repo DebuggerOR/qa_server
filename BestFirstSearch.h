@@ -1,6 +1,5 @@
-//
-// Created by ori on 1/6/19.
-//
+
+
 
 #ifndef PROJ2222_BESTFIRSTSEARCH_H
 #define PROJ2222_BESTFIRSTSEARCH_H
@@ -8,9 +7,20 @@
 
 #include "Searcher.h"
 
-class BestFirstSearch  : public Searcher {
-
+template <class T>
+class BestFirstSearch  : public Searcher<T> {
+    T search(Searchable<T> searchable);
 };
+
+template<class T>
+T BestFirstSearch<T>::search(Searchable<T> searchable) {
+
+
+
+
+
+    return nullptr;
+}
 
 
 #endif //PROJ2222_BESTFIRSTSEARCH_H

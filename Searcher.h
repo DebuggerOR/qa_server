@@ -9,11 +9,12 @@
 #include "Solver.h"
 #include "Searchable.h"
 
-template <class Problem, class Solution, class T>
-class Searcher : public Solver<Problem, Solution> {
+template <class T>
+class Searcher {
 
 public:
-    void search(Searchable<T> searchable);
+    virtual T search(Searchable<T> searchable);
+    int getNumberOfNodesEvaluated();
 };
 
 

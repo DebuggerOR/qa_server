@@ -8,7 +8,8 @@
 
 #include "Searcher.h"
 
-class HillClimbing : public Searcher{
+template <class T>
+class HillClimbing : public Searcher<T>{
 
 };
 
