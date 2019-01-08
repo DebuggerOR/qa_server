@@ -7,14 +7,23 @@
 
 
 template <class T>
-class State{
+class State {
     T state;
     double cost;
     State<T> cameFrom;
 
 public:
     State(T state);
+
     bool equals(State<T> s);
+
+    int operator<(State state);
+
+    double getCost();
+
+    State<T> getCameFrom();
+
+    T getState();
 };
 
 

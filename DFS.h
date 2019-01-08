@@ -16,6 +16,11 @@ class DFS : public Searcher<T>{
 
 template<class T>
 T DFS<T>::search(Searchable<T> searchable) {
+
+
+
+
+
     return nullptr;
 }
 
