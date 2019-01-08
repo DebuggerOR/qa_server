@@ -20,4 +20,5 @@ public:
     list<State<T>> getAllPossibleStates(State<T> s);
 };
 
+
 #endif //PROJ2222_SEARCHABLE_H

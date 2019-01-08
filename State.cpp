@@ -32,3 +32,8 @@ template<class T>
 State<T> State<T>::getCameFrom() {
     return this->cameFrom;
 }
+
+template<class T>
+void State<T>::setCameFrom(State<T> state) {
+    this->cameFrom=state;
+}

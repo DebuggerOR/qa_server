@@ -23,6 +23,8 @@ public:
 
     State<T> getCameFrom();
 
+    void setCameFrom(State<T> state);
+
     T getState();
 };
 
