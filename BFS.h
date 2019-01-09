@@ -47,7 +47,7 @@ list<State<T>> BFS<T>::search(Searchable<T> searchable) {
             bool isWhite = (find(grays.begin()), grays.end(), a) != grays.end();
             if (isWhite){
                 grays.push_back(a);
-                a.setCameFrom(state);
+                a.setCameFrom(state); // TODO doesnt recognise func
                 myQueue.push(a);
             }
         }
