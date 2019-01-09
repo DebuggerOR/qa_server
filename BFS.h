@@ -10,60 +10,68 @@
 #include "list"
 #include "map"
 
+#include <iostream>
+#include <queue>
+#include "Searcher.h"
+
+using std::queue;
+
 template <class T>
-class BFS : public Searcher<T>{
-    T search(Searchable<T> searchable);
+class BFS : public Searcher<T, list<State<T>>>{
+
+public:
+    list<State<T>> search(Searchable<T> searchable);
+
+private:
+    list<State<T>> backTrace(State<T> state, Searchable<T> searchable);
 };
 
-template<class T>
-T BFS<T>::search(Searchable<T> searchable) {
-    list<T> openList;
-    openList.push_back(searchable.getInitialState())
 
-
-    return nullptr;
-}
-
-/*
- * // Mark all the vertices as not visited
-    bool *visited = new bool[V];
-    for(int i = 0; i < V; i++)
-        visited[i] = false;
-
-    // Create a queue for BFS
-    list<int> queue;
-
-    // Mark the current node as visited and enqueue it
-    visited[s] = true;
-    queue.push_back(s);
-
-    // 'i' will be used to get all adjacent
-    // vertices of a vertex
-    list<int>::iterator i;
-
-    while(!queue.empty())
-    {
-        // Dequeue a vertex from queue and print it
-        s = queue.front();
-        cout << s << " ";
-        queue.pop_front();
-
-        // Get all adjacent vertices of the dequeued
-        // vertex s. If a adjacent has not been visited,
-        // then mark it visited and enqueue it
-        for (i = adj[s].begin(); i != adj[s].end(); ++i)
-        {
-            if (!visited[*i])
-            {
-                visited[*i] = true;
-                queue.push_back(*i);
-            }
-        }
-    }
- *
- *
- *
- *
+/**
+ * BFS according Corman
  */
 
-#endif //PROJ2222_BFS_H
+template<class T>
+list<State<T>> BFS<T>::search(Searchable<T> searchable) {
+    list<State<T>> states = searchable.getAllStates();
+    list<State<T>> blacks;
+    list<State<T>> grays;
+    queue<State<T>> myQueue;
+    myQueue.push(searchable.getInitialState());
+
+    while (!myQueue.empty()) {
+        State<T> state = myQueue.front();
+        list<State<T>> adj = searchable.getAllPossibleStates(state);
+
+        for(auto &a : adj){
+            bool isWhite = (find(grays.begin()), grays.end(), a) != grays.end();
+            if (isWhite){
+                grays.push_back(a);
+                a.setCameFrom(state);
+                myQueue.push(a);
+            }
+        }
+
+        myQueue.pop();
+        blacks.push_back(state);
+    }
+}
+
+template<class T>
+list<State<T>> BFS<T>::backTrace(State<T> state, Searchable<T> searchable) {
+    list<State<T>> trace;
+
+    if (state.equals(searchable.getInitialState())) {
+        trace.push_back(state);
+    } else if (state.getCameFrom() == nullptr) {
+        std::cout << "no path" << endl;
+    } else {
+        backTrace(state.getCameFrom(), searchable);
+        trace.push_back(state);
+    }
+
+    return trace;
+}
+
+
+#endif //PROJ2
