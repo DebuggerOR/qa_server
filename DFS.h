@@ -42,6 +42,11 @@ list<State<T>> DFS<T>::search(Searchable<T> searchable) {
 
 template<class T>
 void DFS<T>::visit(State<T> state, list<State<T>> blacks, list<State<T>> grays, Searchable<T> searchable) {
+    // if state is goal state
+    if(searchable.getGoalState().equals(state)){
+        return this->backTrace(state);
+    }
+
     list<State<T>> adj = searchable.getAllPossibleStates(state);
     grays.push_back(state);
 

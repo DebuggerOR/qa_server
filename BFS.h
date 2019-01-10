@@ -33,6 +33,13 @@ private:
 
 template<class T>
 list<State<T>> BFS<T>::search(Searchable<T> searchable) {
+    // if initial case is goal state
+    if(searchable.getInitialState().equals(searchable.getGoalState())){
+        list<State<T>> l;
+        l.push_back(searchable.getInitialState());
+        return l;
+    }
+
     list<State<T>> states = searchable.getAllStates();
     list<State<T>> blacks;
     list<State<T>> grays;
@@ -41,6 +48,12 @@ list<State<T>> BFS<T>::search(Searchable<T> searchable) {
 
     while (!myQueue.empty()) {
         State<T> state = myQueue.front();
+
+        // if state is goal state
+        if(searchable.getGoalState().equals(state)){
+            return this->backTrace(state);
+        }
+
         list<State<T>> adj = searchable.getAllPossibleStates(state);
 
         for(auto &a : adj){
