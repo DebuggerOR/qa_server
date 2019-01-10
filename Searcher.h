@@ -8,25 +8,34 @@
 
 #include "Solver.h"
 #include "Searchable.h"
+#include "SolverImp.h"
 
-template <class T, class Solution>
-class Searcher {
+
+template <class T>
+class Searcher : public SolverImp<int,Searchable<T>> {
+protected:
     int evlaluatedNodes;
 
 public:
     Searcher();
-    virtual Solution search(Searchable<T> searchable);
+    virtual void search(Searchable<T> searchable);
     int getNumberOfNodesEvaluated();
+    int solveImp(Searchable<T> searchable);
 };
 
-template <class T, class Solution>
-int Searcher<T, Solution>::getNumberOfNodesEvaluated() {
+template <class T>
+int Searcher<T>::getNumberOfNodesEvaluated() {
     return this->evlaluatedNodes;
 }
 
-template <class T, class Solution>
-Searcher<T, Solution>::Searcher() {
+template <class T>
+Searcher<T>::Searcher() {
     this->evlaluatedNodes=0;
+}
+
+template<class T>
+int Searcher<T>::solveImp(Searchable<T> searchable) {
+    return this->evlaluatedNodes;
 }
 
 

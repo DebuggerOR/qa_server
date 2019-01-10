@@ -17,14 +17,12 @@
 using std::queue;
 
 template <class T>
-class BFS : public Searcher<T, list<State<T>>>{
+class BFS : public Searcher<T> {
 
 public:
-    list<State<T>> search(Searchable<T> searchable);
-
-private:
-    list<State<T>> backTrace(State<T> state, Searchable<T> searchable);
+    void search(Searchable<T> searchable);
 };
+
 
 
 /**
@@ -32,12 +30,13 @@ private:
  */
 
 template<class T>
-list<State<T>> BFS<T>::search(Searchable<T> searchable) {
+void BFS<T>::search(Searchable<T> searchable) {
+    this->evlaluatedNodes=0;
+
+
     // if initial case is goal state
     if(searchable.getInitialState().equals(searchable.getGoalState())){
-        list<State<T>> l;
-        l.push_back(searchable.getInitialState());
-        return l;
+        return;
     }
 
     list<State<T>> states = searchable.getAllStates();
@@ -48,6 +47,7 @@ list<State<T>> BFS<T>::search(Searchable<T> searchable) {
 
     while (!myQueue.empty()) {
         State<T> state = myQueue.front();
+        this->evlaluatedNodes++;
 
         // if state is goal state
         if(searchable.getGoalState().equals(state)){
@@ -68,22 +68,6 @@ list<State<T>> BFS<T>::search(Searchable<T> searchable) {
         myQueue.pop();
         blacks.push_back(state);
     }
-}
-
-template<class T>
-list<State<T>> BFS<T>::backTrace(State<T> state, Searchable<T> searchable) {
-    list<State<T>> trace;
-
-    if (state.equals(searchable.getInitialState())) {
-        trace.push_back(state);
-    } else if (state.getCameFrom() == nullptr) {
-        std::cout << "no path" << endl;
-    } else {
-        backTrace(state.getCameFrom(), searchable);
-        trace.push_back(state);
-    }
-
-    return trace;
 }
 
 

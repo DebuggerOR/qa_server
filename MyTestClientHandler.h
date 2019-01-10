@@ -17,7 +17,7 @@ class MyTestClientHandler : public ClientHandler{
     CacheManager<Problem,Solution> *cm;
 
 public:
-    MyTestClientHandler(CacheManager<Problem,Solution>* cm, Solver<Problem,Solution>* solver);
+    MyTestClientHandler(CacheManager<Problem, Solution>* cm, Solver<Problem, Solution>* solver);
 
     void handleClient(istream in,ostream out) override;
 };

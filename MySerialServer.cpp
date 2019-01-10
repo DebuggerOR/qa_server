@@ -7,52 +7,40 @@
 bool shouldStop;
 
 void open(ClientHandler *clientHandler, int port) {
-    int rate = 10;
-    int sockfd, newsockfd, clilen;
-    struct sockaddr_in serv_addr, cli_addr;
-    char buffer[256];
-
-    // create socket
-    sockfd = socket(AF_INET, SOCK_STREAM, 0);
-    if (sockfd < 0) {
-        perror("ERROR opening socket");
-        exit(1);
+    int s = socket(AF_INET, SOCK_STREAM, 0);
+    struct sockaddr_in serv;
+    serv.sin_addr.s_addr = INADDR_ANY;
+    serv.sin_port = htons(port);
+    serv.sin_family = AF_INET;
+    if (bind(s, (sockaddr *) &serv, sizeof(serv)) < 0) {
+        cerr << "Bad!" << endl;
     }
 
-    // prepare the sockaddr_in structure
-    serv_addr.sin_family = AF_INET;
-    serv_addr.sin_addr.s_addr = INADDR_ANY;
-    serv_addr.sin_port = htons(port);
+    int new_sock;
+    listen(s, 5);
+    struct sockaddr_in client;
+    socklen_t clilen = sizeof(client);
 
-    // bind
-    if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
-        perror("ERROR on binding");
-        exit(1);
+    timeval timeout;
+    timeout.tv_sec = 10;
+    timeout.tv_usec = 0;
+
+    setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
+
+    new_sock = accept(s, (struct sockaddr *) &client, &clilen);
+    if (new_sock < 0) {
+        if (errno == EWOULDBLOCK) {
+            cout << "timeout!" << endl;
+            exit(2);
+        } else {
+            perror("other error");
+            exit(3);
+        }
     }
-
-    // listen
-    listen(sockfd, rate);
-    clilen = sizeof(cli_addr);
-
-    // accept connection from an incoming client
-    newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, (socklen_t *) &clilen);
-    if (newsockfd < 0) {
-        perror("ERROR on accept");
-        exit(1);
-    }
-
-    // if connection is established then start communicating
-    while (!shouldStop) {
-        sleep(1 / rate);
-        bzero(buffer, 256);
-        read(newsockfd, buffer, 255);
-
-        //TODO HOW???? HOW??? HOW CAN I HANDLE HERE THE CLIENT???
-        //clientHandler->handleClient(buffer, );
-
-
-        cout << buffer << endl;
-    }
+    cout << new_sock << endl;
+    cout << s << endl;
+    close(new_sock);
+    close(s);
 }
 
 void MySerialServer::stop() {
