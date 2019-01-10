@@ -19,7 +19,7 @@
 #include <unistd.h>
 #include <iostream>
 
-using namespace server_side;
+//using namespace server_side;
 
 class MySerialServer : public Server {
 

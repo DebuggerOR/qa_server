@@ -4,7 +4,7 @@
 
 #include "StringReverser.h"
 
-string StringReverser::solve(string problem) {
+string StringReverser::solveImp(string problem) {
     string reversed;
 
     for (int i = problem.length() - 1; i >= 0; --i) {

@@ -7,7 +7,7 @@
 
 #include "ClientHandler.h"
 
-namespace server_side {
+//namespace server_side {
     class Server {
 
     public:
@@ -15,7 +15,7 @@ namespace server_side {
 
         virtual void stop();
     };
-}
+//}
 
 
 #endif //PROJ2222_SERVER_H

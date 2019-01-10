@@ -10,16 +10,16 @@
 
 template <class Solution ,class Problem>
 class Solver {
-    SolverImp<Solution, Problem> solverImp;
+    SolverImp<Solution, Problem>* solverImp;
 
 public:
-    explicit Solver(SolverImp<Solution, Problem> solverImp);
+    Solver(SolverImp<Solution, Problem>* solverImp);
 
     virtual Solution solve(Problem);
 };
 
 template<class Solution, class Problem>
-Solver<Solution, Problem>::Solver(SolverImp<Solution, Problem> solverImp) {
+Solver<Solution, Problem>::Solver(SolverImp<Solution, Problem>* solverImp) {
     this->solverImp=solverImp;
 }
 

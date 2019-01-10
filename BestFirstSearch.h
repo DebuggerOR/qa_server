@@ -15,7 +15,7 @@ using std::priority_queue;
 using std::find;
 
 template <class T>
-class BestFirstSearch  : public Searcher<T, list<State<T>>> {
+class BestFirstSearch  : public Searcher<T> {
 
 public:
     list<State<T>> search(Searchable<T> searchable);

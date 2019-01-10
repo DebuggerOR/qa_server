@@ -9,7 +9,7 @@
 #include "Server.h"
 #include "ClientHandler.h"
 
-using namespace server_side;
+//using namespace server_side;
 
 class MyParallelServer : public Server {
 

@@ -8,7 +8,7 @@
 
 template <class Solution, class Problem>
 class SolverImp {
-    virtual Solution solveImp(Problem)=0;
+    virtual Solution solveImp(Problem problem)=0;
 };
 
 
