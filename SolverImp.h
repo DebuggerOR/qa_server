@@ -8,8 +8,14 @@
 
 template <class Solution, class Problem>
 class SolverImp {
-    virtual Solution solveImp(Problem problem)=0;
+public:
+    virtual Solution solveImp(Problem problem);
 };
+
+template<class Solution, class Problem>
+Solution SolverImp<Solution, Problem>::solveImp(Problem problem) {
+    return nullptr;
+}
 
 
 #endif //PROJ2222_SOLVERIMP_H

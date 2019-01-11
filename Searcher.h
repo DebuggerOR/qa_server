@@ -12,15 +12,15 @@
 
 
 template <class T>
-class Searcher : public SolverImp<int,Searchable<T>> {
+class Searcher : public SolverImp<list<State<T>*>*, Searchable<T>*> {
 protected:
-    int evlaluatedNodes;
+    int evaluatedNodes;
 
 public:
     Searcher();
-    virtual void search(Searchable<T> searchable);
+    virtual list<State<T>*>* search(Searchable<T>* searchable);
     int getNumberOfNodesEvaluated();
-    int solveImp(Searchable<T> searchable);
+    list<State<T>*>* solveImp(Searchable<T>* searchable) override;
 };
 
 template <class T>
@@ -30,12 +30,17 @@ int Searcher<T>::getNumberOfNodesEvaluated() {
 
 template <class T>
 Searcher<T>::Searcher() {
-    this->evlaluatedNodes=0;
+    this->evaluatedNodes=0;
 }
 
 template<class T>
-int Searcher<T>::solveImp(Searchable<T> searchable) {
-    return this->evlaluatedNodes;
+list<State<T>*>* Searcher<T>::solveImp(Searchable<T>* searchable) {
+    return this->search(searchable);
+}
+
+template<class T>
+list<State<T> *> *Searcher<T>::search(Searchable<T> *searchable) {
+    return nullptr;
 }
 
 

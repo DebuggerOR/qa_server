@@ -1,5 +1,8 @@
 #include <iostream>
 #include "MatrixCreator.h"
+#include "Solver.h"
+#include "DFS.h"
+#include "BFS.h"
 //#include "MySerialServer.h"
 //#include "MatrixCreator.h"
 
@@ -10,7 +13,16 @@ int main() {
     Matrix* matrix = matrixCreator->createFromConsole();
     matrix->displayMat();
 
-    cin;
+    auto * solver = new Solver<list<State<int>*>*, Searchable<int>*>;
+    solver->setSolverImp(new BFS<int>);
+    list<State<int>*>* list = solver->solve(matrix);
+    for(auto &l : (*list)){
+        cout<<l->getCost()<<"<-";
+    }
+
+
+    int x;
+    cin>>x;
 
     return 0;
 }

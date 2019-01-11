@@ -15,10 +15,25 @@ template <class T>
 class Searchable {
 
 public:
-    State<T> getInitialState();
-    State<T> getGoalState();
-    list<State<T>> getAllPossibleStates(State<T> s);
+    virtual State<T>* getInitialState();
+    virtual State<T>* getGoalState();
+    virtual list<State<T>*>* getAllPossibleStates(State<T>* s);
 };
+
+template<class T>
+State<T> *Searchable<T>::getInitialState() {
+    return nullptr;
+}
+
+template<class T>
+State<T> *Searchable<T>::getGoalState() {
+    return nullptr;
+}
+
+template<class T>
+list<State<T> *> *Searchable<T>::getAllPossibleStates(State<T> *s) {
+    return nullptr;
+}
 
 
 #endif //PROJ2222_SEARCHABLE_H

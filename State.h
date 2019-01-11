@@ -10,23 +10,59 @@ template <class T>
 class State {
     T state;
     double cost;
-    State<T> cameFrom;
+    State<T>* cameFrom;
 
 public:
-    State(T state);
-
-    bool equals(State<T> s);
+    bool equals(State<T>* s);
 
     int operator<(State state);
 
     double getCost();
 
-    State<T> getCameFrom();
+    State<T>* getCameFrom();
 
-    void setCameFrom(State<T> state);
+    void setCost(T cost);
+
+    void setCameFrom(State<T>* state);
 
     T getState();
 };
+
+template<class T>
+bool State<T>::equals(State<T>* state) {
+    return this->state = state->state;
+}
+
+template<class T>
+int State<T>::operator<(State state) {
+    return static_cast<int>(this->cost - state.getCost());
+}
+
+template<class T>
+double State<T>::getCost() {
+    return this->cost;
+}
+
+template<class T>
+T State<T>::getState() {
+    return this->state;
+}
+
+template<class T>
+State<T>* State<T>::getCameFrom() {
+    return this->cameFrom;
+}
+
+template<class T>
+void State<T>::setCameFrom(State<T>* state) {
+    this->cameFrom=state;
+}
+
+template<class T>
+void State<T>::setCost(T cost) {
+    this->cost=cost;
+}
+
 
 
 

@@ -43,21 +43,21 @@ Matrix* MatrixCreator::createFromConsole() {
     }
 
     // check width height
-    cout<<height<<","<<width<<endl;
+    cout<<"create mat "<<height<<"X"<<width<<endl;
 
     Matrix* matrix = new Matrix(height,width);
 
     int i=0;
     string num;
     while (i<input.size()) {
-        vector<int> row;
+        vector<int>* row = new vector<int>;
         while (input[i]!='$'&&i<input.size()) {
             num="";
             while (input[i] != ',' && input[i] != '$' && i < input.size()) {
                 num+=input[i];
                 ++i;
             }
-            row.push_back(stoi(num));
+            row->push_back(stoi(num));
             ++i;
         }
         matrix->fill(row);
