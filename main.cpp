@@ -3,6 +3,7 @@
 #include "Solver.h"
 #include "DFS.h"
 #include "BFS.h"
+#include "Utils.h"
 //#include "MySerialServer.h"
 //#include "MatrixCreator.h"
 
@@ -13,13 +14,15 @@ int main() {
     Matrix* matrix = matrixCreator->createFromConsole();
     matrix->displayMat();
 
-    auto * solver = new Solver<list<State<int>*>*, Searchable<int>*>;
-    solver->setSolverImp(new BFS<int>);
-    list<State<int>*>* list = solver->solve(matrix);
-    for(auto &l : (*list)){
-        cout<<l->getCost()<<"<-";
+    auto * solver = new Solver<list<State<string>*>*, Searchable<string>*>;
+    solver->setSolverImp(new BFS<string>);
+    list<State<string>*>* lst = solver->solve(matrix);
+    vector<string> vec;
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
     }
-
+    Utils utils;
+    cout<<utils.coordinatesToString(vec)<<endl;
 
     int x;
     cin>>x;

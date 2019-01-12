@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include "MatrixCreator.h"
+#include "Utils.h"
 
 Matrix* MatrixCreator::createFromConsole() {
     int height=0;
@@ -11,7 +12,7 @@ Matrix* MatrixCreator::createFromConsole() {
     string input;
     string line;
 
-    cout << "type your mat (to finish type 'exit')" << endl;
+    cout << "type your mat (to finish type 'end')" << endl;
 
     while (true) {
         // get line each time
@@ -19,7 +20,7 @@ Matrix* MatrixCreator::createFromConsole() {
         ++height;
 
         // read until type 'quit'
-        if (line == "exit") { break; }
+        if (line == "end") { break; }
 
         // add '$' after each line
         input += line + "$";
@@ -42,9 +43,6 @@ Matrix* MatrixCreator::createFromConsole() {
         ++j;
     }
 
-    // check width height
-    cout<<"create mat "<<height<<"X"<<width<<endl;
-
     Matrix* matrix = new Matrix(height,width);
 
     int i=0;
@@ -63,6 +61,15 @@ Matrix* MatrixCreator::createFromConsole() {
         matrix->fill(row);
         ++i;
     }
+
+    Utils utils;
+    cout << "type entrance (r:c)" << endl;
+    getline(cin, line);
+    matrix->setInitialState(utils.getRowCoordintae(line),utils.getColCoordintae(line));
+
+    cout << "type exit (r:c)" << endl;
+    getline(cin, line);
+    matrix->setGoalState(utils.getRowCoordintae(line),utils.getColCoordintae(line));
 
     return matrix;
 }

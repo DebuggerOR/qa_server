@@ -9,10 +9,12 @@
 
 using namespace std;
 
-class Matrix : public Searchable<int> {
+class Matrix : public Searchable<string> {
     int numRows;
     int numCols;
-    vector<vector<State<int> *> *> *rows;
+    State<string> * entrance;
+    State<string> * exit;
+    vector<vector<State<string> *> *> *rows;
 
 public:
     Matrix(int rows, int cols);
@@ -21,11 +23,15 @@ public:
 
     void displayMat();
 
-    State<int> *getInitialState();
+    void setInitialState(int row, int col);
 
-    State<int> *getGoalState();
+    void setGoalState(int row, int col);
 
-    list<State<int>*> *getAllPossibleStates(State<int> *state);
+    State<string> *getInitialState();
+
+    State<string> *getGoalState();
+
+    list<State<string>*> *getAllPossibleStates(State<string> *state);
 };
 
 

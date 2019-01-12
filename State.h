@@ -13,6 +13,8 @@ class State {
     State<T>* cameFrom;
 
 public:
+    State(T state);
+
     bool equals(State<T>* s);
 
     int operator<(State state);
@@ -21,7 +23,7 @@ public:
 
     State<T>* getCameFrom();
 
-    void setCost(T cost);
+    void setCost(double cost);
 
     void setCameFrom(State<T>* state);
 
@@ -59,11 +61,14 @@ void State<T>::setCameFrom(State<T>* state) {
 }
 
 template<class T>
-void State<T>::setCost(T cost) {
+void State<T>::setCost(double cost) {
     this->cost=cost;
 }
 
-
+template<class T>
+State<T>::State(T state) {
+    this->state=state;
+}
 
 
 #endif //PROJ2222_STATE_H

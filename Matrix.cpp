@@ -13,13 +13,13 @@ void Matrix::fill(vector<int>* allNums) {
 Matrix::Matrix(int rows, int cols) {
     this->numRows=rows;
     this->numCols=cols;
-    this->rows = new vector<vector<State<int>*>*>;
+    this->rows = new vector<vector<State<string>*>*>;
 
     for (int i = 0; i < this->numRows; ++i) {
-        vector<State<int>*>* row = new vector<State<int>*>;
+        vector<State<string>*>* row = new vector<State<string>*>;
         this->rows->push_back(row);
         for (int j = 0; j < this->numCols; ++j) {
-            row->push_back(new State<int>);
+            row->push_back(new State<string>(to_string(i)+","+to_string(j)));
         }
     }
 }
@@ -34,15 +34,15 @@ void Matrix::displayMat() {
     }
 }
 
-State<int>* Matrix::getInitialState() {
-    return this->rows->at(0)->at(0);
+State<string>* Matrix::getInitialState() {
+    return this->entrance;
 }
 
-State<int>* Matrix::getGoalState() {
-    return this->rows->at(this->numRows-1)->at(this->numCols-1);
+State<string>* Matrix::getGoalState() {
+    return this->exit;
 }
 
-list<State<int>*>* Matrix::getAllPossibleStates(State<int> *state) {
+list<State<string>*>* Matrix::getAllPossibleStates(State<string> *state) {
     int row;
     int col;
     bool isFinished = false;
@@ -56,7 +56,7 @@ list<State<int>*>* Matrix::getAllPossibleStates(State<int> *state) {
         }
     }
 
-    list<State<int>*>* pos = new list<State<int>*>;
+    auto * pos = new list<State<string>*>;
     if(row > 0){
         pos->push_back(this->rows->at(row-1)->at(col));
     }
@@ -74,6 +74,14 @@ list<State<int>*>* Matrix::getAllPossibleStates(State<int> *state) {
     }
 
     return pos;
+}
+
+void Matrix::setInitialState(int row, int col) {
+    this->entrance=this->rows->at(row)->at(col);
+}
+
+void Matrix::setGoalState(int row, int col) {
+    this->exit=this->rows->at(row)->at(col);
 }
 
 

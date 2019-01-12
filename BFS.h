@@ -57,7 +57,7 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
         list<State<T>*> adj = *(searchable->getAllPossibleStates(state));
 
         for(auto &a : adj){
-            bool isWhite = true;// = (find(grays.begin(), grays.end(), a) == grays.end());
+            bool isWhite = true;
             for (auto &g : grays) {
                 if(a == g){
                     isWhite= false;
@@ -66,7 +66,7 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
 
             if (isWhite){
                 grays.push_back(a);
-                a->setCameFrom(state); // TODO doesnt recognise func
+                a->setCameFrom(state);
                 myQueue.push(a);
             }
         }
