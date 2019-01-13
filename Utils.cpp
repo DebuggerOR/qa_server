@@ -51,3 +51,7 @@ int Utils::getColCoordintae(string crdnt) {
     }
     return col;
 }
+
+Point *Utils::stringToPoint(string crdnt) {
+    return new Point(this->getRowCoordintae(crdnt), this->getColCoordintae(crdnt));
+}

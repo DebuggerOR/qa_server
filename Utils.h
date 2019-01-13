@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include "Point.h"
 
 
 using namespace std;
@@ -16,6 +17,8 @@ public:
     int getColCoordintae(string crdnt);
 
     string coordinatesToString(vector<string> crdnts);
+
+    Point* stringToPoint(string crdnt);
 };
 
 
