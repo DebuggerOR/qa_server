@@ -27,12 +27,12 @@ Matrix* MatrixCreator::createFromConsole() {
     }
 
     // fix height
-    --height;
+    height-=3;
 
     // determine width
     int j=0;
     bool finished=false;
-    while(input[j]!='$'&&j<input.size()&&!finished) {
+    while(input[j]!='$'&&!finished) {
         ++width;
         while (input[j] != ',' && j < input.size()&&!finished) {
             if (input[j] == '$') {
@@ -47,29 +47,50 @@ Matrix* MatrixCreator::createFromConsole() {
 
     int i=0;
     string num;
-    while (i<input.size()) {
-        vector<int>* row = new vector<int>;
-        while (input[i]!='$'&&i<input.size()) {
+    vector<int>* nums = new vector<int>;
+    for (int r = 0; r < height; ++r) {
+        for (int c = 0; c < width; ++c) {
             num="";
-            while (input[i] != ',' && input[i] != '$' && i < input.size()) {
+            while (input[i]!=','&&input[i]!='$'){
                 num+=input[i];
                 ++i;
             }
-            row->push_back(stoi(num));
+            nums->push_back(stoi(num));
             ++i;
         }
-        matrix->fill(row);
+    }
+    matrix->fill(nums);
+//
+//    while (i<height) {
+//        vector<int>* row = new vector<int>;
+//        while (input[i]!='$') {
+//            num="";
+//            while (input[i] != ',' && input[i] != '$') {
+//                num+=input[i];
+//                ++i;
+//            }
+//            row->push_back(stoi(num));
+//            ++i;
+//        }
+//        matrix->fill(row);
+//        ++i;
+//    }
+
+    string entrance;
+    while (input[i]!='$'){
+        entrance+=input[i];
+        ++i;
+    }
+    ++i;
+    string exit;
+    while(i<input.size()&&input[i]!='$'){
+        exit+=input[i];
         ++i;
     }
 
     Utils utils;
-    cout << "type entrance (r:c)" << endl;
-    getline(cin, line);
-    matrix->setInitialState(utils.getRowCoordintae(line),utils.getColCoordintae(line));
-
-    cout << "type exit (r:c)" << endl;
-    getline(cin, line);
-    matrix->setGoalState(utils.getRowCoordintae(line),utils.getColCoordintae(line));
+    matrix->setInitialState(utils.getRowCoordintae(entrance),utils.getColCoordintae(entrance));
+    matrix->setGoalState(utils.getRowCoordintae(exit),utils.getColCoordintae(exit));
 
     return matrix;
 }
