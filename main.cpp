@@ -4,6 +4,7 @@
 #include "DFS.h"
 #include "BFS.h"
 #include "Utils.h"
+#include "BestFirstSearch.h"
 //#include "MySerialServer.h"
 //#include "MatrixCreator.h"
 
@@ -23,6 +24,23 @@ int main() {
     }
     Utils utils;
     cout<<utils.coordinatesToString(vec)<<endl;
+
+    solver->setSolverImp(new DFS<string>);
+    list<State<string>*>* lst1 = solver->solve(matrix);
+    vector<string> vec1;
+    for (auto &l:(*lst1)) {
+        vec1.push_back(l->getState());
+    }
+    cout<<utils.coordinatesToString(vec)<<endl;
+
+    solver->setSolverImp(new BestFirstSearch<string>);
+    list<State<string>*>* lst2 = solver->solve(matrix);
+    vector<string> vec2;
+    for (auto &l:(*lst2)) {
+        vec2.push_back(l->getState());
+    }
+    cout<<utils.coordinatesToString(vec)<<endl;
+
 
     int x;
     cin>>x;

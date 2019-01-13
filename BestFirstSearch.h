@@ -7,76 +7,114 @@
 
 #include <queue>
 #include <algorithm>
+#include <iostream>
+#include <cstdlib>
 #include "Searcher.h"
 
-
-using std::list;
-using std::priority_queue;
-using std::find;
+using namespace std;
 
 template <class T>
 class BestFirstSearch  : public Searcher<T> {
-
 public:
-    list<State<T>> search(Searchable<T> searchable);
+    list<State<T>*>* search(Searchable<T>* searchable);
 
 private:
-    list<State<T>> backTrace(State<T>);
+    list<State<T>*>* backTrace(State<T>* state, Searchable<T>* searchable);
 };
 
 template<class T>
-list<State<T>> BestFirstSearch<T>::search(Searchable<T> searchable) {
-    priority_queue<State<T>> openList;
-    list<State<T>> closedList; // TODO find better ds
+list<State<T> *> *BestFirstSearch<T>::backTrace(State<T> *state, Searchable<T> *searchable) {
+    cout<<"Best First Search returns trace"<<endl;
+    auto * trace = new list<State<T>*>;
 
-    openList.push(searchable.getInitialState());
-    while(openList.size()>0){
-        State<T> n = openList.pop();
-        closedList.push_back(n);
-        if(n.equals(searchable.getGoalState())){
-            return backTrace(n);
+    while (state != searchable->getInitialState()){
+        if(state == nullptr){
+            cout<<"no path"<<endl;
+            return nullptr;
         }
-        list<State<T>> successors = searchable.getAllPossibleStates(n);
-        for (auto &s : successors) {
-            bool isClosedContains = (find(closedList.begin(), closedList.end(), s) != closedList.end());
-            bool isOpenContains = (find(openList.begin()), openList.end(), s) != openList.end();
-
-            // if s is not is CLOSED and s is not in OPEN
-            if(!isClosedContains && !isOpenContains){
-                s.setCameFrom(n);
-                openList.push(s);
-
-                // otherwise, if this new path is better than prev one
-            } else if(true) {
-
-                // if it is not in OPEN add it to OPEN
-                if (!isOpenContains(s)) {
-                    openList.push(s);
-
-                    // otherwise adjust its priority in OPEN
-                } else {
-
-                }
-            }
-        }
+        trace->push_back(state);
+        state = state->getCameFrom();
     }
-
-    return nullptr;
-}
-
-template<class T>
-list<State<T>> BestFirstSearch<T>::backTrace(State<T>) {
-    list<State<T>> trace;
-    State<T> s;
-
-    while (s != nullptr) {
-        trace.push_back(s.getCameFrom());
-        s = s.getCameFrom();
-    }
+    trace->push_back(searchable->getInitialState());
 
     return trace;
 }
 
 
+template <class T, class S, class C>
+S& Container(priority_queue<T, S, C>& q) {
+    struct HackedQueue : private priority_queue<T, S, C> {
+        static S& Container(priority_queue<T, S, C>& q) {
+            return q.*&HackedQueue::c;
+        }
+    };
+    return HackedQueue::Container(q);
+}
+
+template<class T>
+list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
+    priority_queue<State<T> *> open;
+
+    open.push(searchable->getInitialState());
+    list<State<T> *> closed;
+    while (!open.empty()) {
+        State<T> *s = open.top();
+        open.pop();
+        closed.push_back(s);
+
+        if (s == (searchable->getGoalState())) {
+            return this->backTrace(s, searchable);
+        } else {
+            list<State<T> *> *adj = searchable->getAllPossibleStates(s);
+            for (auto &a : *adj) {
+                bool isInOpen = false;
+                bool isInClosed = false;
+                vector<State<T>*> &vec = Container(open);
+                for (auto &v : vec) {
+                    if (v == a) {
+                        isInOpen = true;
+                    }
+                }
+                for (auto &v : closed) {
+                    if (v == a) {
+                        isInClosed = true;
+                    }
+                }
+
+
+                if (!isInClosed && !isInOpen) {
+                    a->setCameFrom(s);
+                    open.push(a);
+                } else {
+                    if (a->getCost() > (s->getCost() + 1)) {
+                        a->setCost(s->getCost() + 1);
+                        a->setCameFrom(s);
+                    }
+                    if (!isInOpen) {
+                        open.push(a);
+                    }
+                    //todo Otherwise, adjust its priority in OPEN??
+                }
+
+
+//                if (!isInOpen && !isInClosed) {
+//                    a->setCameFrom(s);
+//                    open.push(s);
+//                    } else {
+//                    // this path is better than prev
+//                    if (a->getCost() > s->getCost() + 1) {
+//                        if (!isInOpen) {
+//                            open.push(a);
+//                        } else {
+//                            a->setCost(s->getCost() + 1);
+//                        }
+//                    }
+//                }
+            }
+        }
+    }
+}
+
 
 #endif
+

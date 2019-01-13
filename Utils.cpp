@@ -1,6 +1,4 @@
-//
-// Created by ori on 1/12/19.
-//
+
 
 #include "Utils.h"
 
@@ -23,6 +21,7 @@ string Utils::coordinatesToString(vector<string> crdnts) {
             path+="Left,";
         }
     }
+    //path.erase(0);
     path.erase(path.size()-1);
     return path;
 }
