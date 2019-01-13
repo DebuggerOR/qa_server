@@ -12,8 +12,8 @@ using namespace std;
 class Matrix : public Searchable<string> {
     int numRows;
     int numCols;
-    State<string> * entrance;
-    State<string> * exit;
+    State<string> *entrance;
+    State<string> *exit;
     vector<vector<State<string> *> *> *rows;
 
 public:
@@ -31,7 +31,7 @@ public:
 
     State<string> *getGoalState();
 
-    list<State<string>*> *getAllPossibleStates(State<string> *state);
+    list<State<string> *> *getAllPossibleStates(State<string> *state);
 };
 
 
