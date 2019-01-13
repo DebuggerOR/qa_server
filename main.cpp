@@ -5,78 +5,19 @@
 #include "BFS.h"
 #include "Utils.h"
 #include "BestFirstSearch.h"
-//#include "MySerialServer.h"
-//#include "MatrixCreator.h"
+#include "MySerialServer.h"
+#include "MatrixCreator.h"
+#include "MyClientHandler.h"
+#include "MyParallelServer.h"
 
-int main() {
+int main(int argc, const char *argv[]) {
     std::cout << "Hello, World!" << std::endl;
 
-    auto * matrixCreator = new MatrixCreator;
-    Matrix* matrix = matrixCreator->createFromConsole();
-    matrix->displayMat();
+    ClientHandler* clientHandler = new MyClientHandler();
 
-    auto * solver = new Solver<list<State<string>*>*, Searchable<string>*>;
-    solver->setSolverImp(new BFS<string>);
-    list<State<string>*>* lst = solver->solve(matrix);
-    vector<string> vec;
-    for (auto &l:(*lst)) {
-        vec.push_back(l->getState());
-    }
-    Utils utils;
-    cout<<utils.coordinatesToString(vec)<<endl;
+    server_side::Server* server = new MyParallelServer();
 
-    solver->setSolverImp(new DFS<string>);
-    list<State<string>*>* lst1 = solver->solve(matrix);
-    vector<string> vec1;
-    for (auto &l:(*lst1)) {
-        vec1.push_back(l->getState());
-    }
-    cout<<utils.coordinatesToString(vec)<<endl;
-
-    solver->setSolverImp(new BestFirstSearch<string>);
-    list<State<string>*>* lst2 = solver->solve(matrix);
-    vector<string> vec2;
-    for (auto &l:(*lst2)) {
-        vec2.push_back(l->getState());
-    }
-    cout<<utils.coordinatesToString(vec)<<endl;
-
-
-    int x;
-    cin>>x;
+    server->start(stoi(argv[1]), clientHandler);
 
     return 0;
 }
-
-//
-//namespace boot {
-//
-//    class Main {
-//
-//    public:
-//        int main(int argc, const char * argv[]) {
-//            // if get arguments
-//            if(argc>1){
-////                // server
-////                Server* server = new MySerialServer;
-////
-////                // cache manager
-////                CacheManager<string,string>* cacheManager = new FileCacheManager<string,string>;
-////
-//////                // solver
-//////                Solver solver(new StringReverser);
-////
-//////                // client handler
-//////                ClientHandler* clientHandler = new MyTestClientHandler<string,string>(cacheManager, solver);
-////
-//////                // start server
-//////                server->start(stoi(argv[0]), clientHandler);
-////            }
-//
-//            std::cout << "Hello, World!" << std::endl;
-//
-//            return 0;
-//
-//        }
-//   // };
-//}

@@ -12,7 +12,7 @@
 
 
 template <class Solution ,class Problem>
-class MyTestClientHandler : public ClientHandler{
+class MyTestClientHandler : public ClientHandler {
     Solver<Problem,Solution> *solver;
     CacheManager<Problem,Solution> *cm;
 

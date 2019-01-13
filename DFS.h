@@ -45,7 +45,7 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
     grays.push_back(state);
 
     for(auto &a : adj) {
-        bool isWhite = true;// = (find(grays.begin(), grays.end(), a) == grays.end());
+        bool isWhite = true;
         for (auto &g : grays) {
             if(a == g){
                 isWhite= false;
@@ -54,7 +54,7 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
 
         if(isWhite) {
             this->evaluatedNodes++;
-            a->setCameFrom(state); // doesnt recognise. weird...
+            a->setCameFrom(state);
             return this->visit(a, blacks, grays, searchable);
         }
     }

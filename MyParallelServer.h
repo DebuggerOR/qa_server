@@ -11,7 +11,7 @@
 
 //using namespace server_side;
 
-class MyParallelServer : public Server {
+class MyParallelServer : public server_side::Server {
 
 public:
     MyParallelServer()= default;

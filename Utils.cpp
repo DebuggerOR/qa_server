@@ -55,3 +55,28 @@ int Utils::getColCoordintae(string crdnt) {
 Point *Utils::stringToPoint(string crdnt) {
     return new Point(this->getRowCoordintae(crdnt), this->getColCoordintae(crdnt));
 }
+
+string Utils::pointsToString(vector<Point *> crdnts) {
+    Point* c1;
+    Point* c2 = crdnts[0];
+    string path;
+    for (int i = 1; i < crdnts.size(); ++i) {
+        c1=c2;
+        c2=crdnts[i];
+        if(c1->getRow()-1==c2->getRow()){
+            path+="Down,";
+        }
+        if(c1->getRow()==c2->getRow()-1){
+            path+="Up,";
+        }
+        if(c1->getCol()-1==c2->getCol()){
+            path+="Right,";
+        }
+        if(c1->getCol()==c2->getCol()-1){
+            path+="Left,";
+        }
+    }
+    //path.erase(0);
+    path.erase(path.size()-1);
+    return path;
+}

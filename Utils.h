@@ -18,6 +18,8 @@ public:
 
     string coordinatesToString(vector<string> crdnts);
 
+    string pointsToString(vector<Point*> crdnts);
+
     Point* stringToPoint(string crdnt);
 };
 

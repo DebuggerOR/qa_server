@@ -14,7 +14,11 @@ using namespace std;
 class ClientHandler {
 
 public:
-    virtual void handleClient(istream in,ostream out);
+    virtual void handleClient();
+
+    virtual void handleClient(int port);
+
+    virtual void handleClient(istream in, ostream out);
 };
 
 

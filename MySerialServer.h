@@ -21,7 +21,7 @@
 
 //using namespace server_side;
 
-class MySerialServer : public Server {
+class MySerialServer : public server_side::Server {
 
 public:
     MySerialServer()= default;
