@@ -2,16 +2,21 @@
 // Created by ori on 1/6/19.
 //
 
+#include <cstring>
 #include "MySerialServer.h"
 
-bool shouldStop;
+
+bool serialStop;
 
 void open(ClientHandler *clientHandler, int port) {
+    cout << "start server at port " << port << endl;
+    string nextBuffer, connectedBuffer;
     int s = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serv;
     serv.sin_addr.s_addr = INADDR_ANY;
     serv.sin_port = htons(port);
     serv.sin_family = AF_INET;
+    char buffer[4096];
     if (bind(s, (sockaddr *) &serv, sizeof(serv)) < 0) {
         cerr << "Bad!" << endl;
     }
@@ -26,28 +31,46 @@ void open(ClientHandler *clientHandler, int port) {
     timeout.tv_usec = 0;
 
     setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
-
     new_sock = accept(s, (struct sockaddr *) &client, &clilen);
-    if (new_sock < 0) {
-        if (errno == EWOULDBLOCK) {
-            cout << "timeout!" << endl;
-            exit(2);
-        } else {
-            perror("other error");
-            exit(3);
+    try {
+        while (!serialStop) {
+            bzero(buffer, 256);
+            read(new_sock, buffer, 255);
+            if(buffer!=""){
+                connectedBuffer+=buffer;
+                connectedBuffer+="$";
+            }
+            if(!strcmp(buffer,"end")){
+                cout<<connectedBuffer<<endl;
+                string answer;
+                clientHandler->handleClient(connectedBuffer,answer);
+                const char *cstr = answer.c_str();
+                write(new_sock, cstr, answer.size());
+                connectedBuffer="";
+            }
+            if (new_sock < 0) {
+                if (errno == EWOULDBLOCK) {
+                    cout << "timeout!" << endl;
+                    exit(2);
+                } else {
+                    perror("other error");
+                    exit(3);
+                }
+            }
         }
+    } catch (...) {
+        cout<<"connection stopped"<<endl;
     }
-    cout << new_sock << endl;
-    cout << s << endl;
     close(new_sock);
     close(s);
 }
 
 void MySerialServer::stop() {
-    shouldStop = true;
+    serialStop = true;
 }
 
 void MySerialServer::start(int port, ClientHandler *clientHandler) {
-    shouldStop = false;
-    new thread(open, clientHandler, port);
+    serialStop = false;
+    thread* t = new thread(open, clientHandler, port);
+    t->join();
 }

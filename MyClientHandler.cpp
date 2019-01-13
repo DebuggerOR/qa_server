@@ -3,9 +3,12 @@
 //
 
 #include "MyClientHandler.h"
+#include "MatrixCreator.h"
 
-void MyClientHandler::handleClient(int port) {
 
+void MyClientHandler::handleClient(string question, string answer) {
+    cout<<question<<endl;
+    MatrixCreator matrixCreator;
+    Matrix* matrix = matrixCreator.createFromString(question);
 
-    ClientHandler::handleClient(port);
 }

@@ -10,7 +10,8 @@
 
 class MyClientHandler : public ClientHandler {
 public:
-    void handleClient(int port) override;
+
+    void handleClient(string question, string answer);
 };
 
 

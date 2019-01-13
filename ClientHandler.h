@@ -18,6 +18,8 @@ public:
 
     virtual void handleClient(int port);
 
+    virtual void handleClient(string &question, string &answer);
+
     virtual void handleClient(istream in, ostream out);
 };
 

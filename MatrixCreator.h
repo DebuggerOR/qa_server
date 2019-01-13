@@ -13,6 +13,7 @@ using namespace std;
 
 class MatrixCreator {
 public:
+    Matrix* createFromString(string input);
     Matrix* createFromConsole();
 };
 

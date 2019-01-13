@@ -18,7 +18,7 @@ public:
 
     void stop() override;
 
-    void start(int port, ClientHandler *clientHandler);
+    void start(int port, ClientHandler *clientHandler) override;
 };
 
 

@@ -3,3 +3,11 @@
 //
 
 #include "MyParallelServer.h"
+
+void MyParallelServer::stop() {
+    Server::stop();
+}
+
+void MyParallelServer::start(int port, ClientHandler *clientHandler) {
+    Server::start(port, clientHandler);
+}

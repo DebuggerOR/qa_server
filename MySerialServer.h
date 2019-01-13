@@ -19,9 +19,9 @@
 #include <unistd.h>
 #include <iostream>
 
-//using namespace server_side;
+using namespace server_side;
 
-class MySerialServer : public server_side::Server {
+class MySerialServer : public Server {
 
 public:
     MySerialServer()= default;
