@@ -10,56 +10,125 @@
 template <class T>
 class AStar : public Searcher<T> {
     list<State<T>*>* search(Searchable<T>* searchable);
+
+private:
+
+    double fromHere(State<T> *state, State<T>* goal);
 };
 
 
 template<class T>
+double AStar<T>::fromHere(State<T> *state, State<T>* goal) {
+    Utils utils;
+    return utils.distance(state, goal);
+}
+
+template<class T>
 list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
     Utils utils;
-    list<State<T>*> visited;
+    list<State<T>*> openList;
+    list<State<T>*> closedList;
+    map<State<T>*, double> toState;
+
+    State<T>* init = searchable->getInitialState();
     State<T>* goal = searchable->getGoalState();
 
-    State<T>* state = searchable->getInitialState();
-    visited.push_back(state);
-    state->setCameFrom(NULL);
+    openList.push_back(init);
+    toState.insert(pair<State<T>*,double>(init,0));
 
-    while (true) {
-        list<State<T> *> *adj = searchable->getAllPossibleStates(state);
-        State<T> *best = NULL;
-        for (auto &a : *adj) {
-            bool isVisited = false;
-            for (auto &v : visited) {
-                if(a == v){
-                    isVisited = true;
+    while(!openList.empty()){
+        // find best in open list
+        State<T>* best= openList.front();
+        for(auto &o : openList){
+            if(this->fromHere(o)+toState.at(o)<this->fromHere(best)+toState.at(best)){
+                best=o;
+            }
+        }
+        openList.remove(best);
+
+        list<State<T>*>* adj = searchable->getAllPossibleStates(best);
+        for(auto &a : adj){
+            if(best == a){
+                return this->backTrace(a);
+            }
+
+
+
+
+
+
+            bool isInOpen = false;
+            for (auto &o : openList) {
+                if(o == a){
+                    isInOpen = true;
+                    break;
                 }
             }
 
-            if(!isVisited) {
-                double aDst;
-                double bestDst;
-                if(best!=NULL) {
-                    aDst = a->getCost() + utils.distance(a->getState(), goal->getState());
-                    bestDst = best->getCost() + utils.distance(best->getState(), goal->getState());
-                }
-                if (best==NULL || aDst < bestDst) {
-                    best = a;
-                    visited.push_back(a);
-                    ++this->evaluatedNodes;
+            bool isInClosed = false;
+            for (auto &c : closedList) {
+                if(c == a){
+                    isInClosed = true;
+                    break;
                 }
             }
+            if(isInClosed){
+                if(this->fromHere(a)+toState.at(a)<this->fromHere(best)+toState.at(best)){
+                    continue;
+                }
+            }
+
+
+            if(isInOpen){
+                continue;
+            }
+
+
         }
-        cout<<best->getState()->getRow()<<","<<best->getState()->getCol()<<endl;
-        best->setCameFrom(state);
-        state=best;
-        if(state==goal){
-            return this->backTrace(state, searchable);
-        }
+
+        closedList.push_back(best);
     }
 }
 
 
 
 
+
+
+
+//3.  while the open list is not empty
+//        a) find the node with the least f on
+//the open list, call it "q"
+//
+//b) pop q off the open list
+//
+//c) generate q's 8 successors and set their
+//parents to q
+//
+//        d) for each successor
+//i) if successor is the goal, stop search
+//        successor.g = q.g + distance between
+//        successor and q
+//        successor.h = distance from goal to
+//successor (This can be done using many
+//ways, we will discuss three heuristics-
+//Manhattan, Diagonal and Euclidean
+//Heuristics)
+//
+//successor.f = successor.g + successor.h
+//
+//ii) if a node with the same position as
+//        successor is in the OPEN list which has a
+//lower f than successor, skip this successor
+//
+//        iii) if a node with the same position as
+//        successor  is in the CLOSED list which has
+//        a lower f than successor, skip this successor
+//        otherwise, add  the node to the open list
+//end (for loop)
+//
+//e) push q on the closed list
+//end (while loop)
 
 
 /*
