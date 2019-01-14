@@ -1,6 +1,4 @@
-//
-// Created by ori on 1/6/19.
-//
+
 
 #ifndef PROJ2222_MYSERIALSERVER_H
 #define PROJ2222_MYSERIALSERVER_H
@@ -116,17 +114,17 @@ void openParallel(ClientHandler *clientHandler, int port) {
 
     bind(s, (sockaddr *) &serv, sizeof(serv));
 
+    listen(s, 20000);
+    struct sockaddr_in client;
+    socklen_t clilen = sizeof(client);
+
+    timeval timeout;
+    timeout.tv_sec = 10000;
+    timeout.tv_usec = 0;
+
     while (!parallelStop) {
         try {
-
             int new_sock;
-            listen(s, 20000);
-            struct sockaddr_in client;
-            socklen_t clilen = sizeof(client);
-
-            timeval timeout;
-            timeout.tv_sec = 10;
-            timeout.tv_usec = 0;
 
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
             new_sock = accept(s, (struct sockaddr *) &client, &clilen);
