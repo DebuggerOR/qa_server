@@ -11,7 +11,7 @@
 class MyClientHandler : public ClientHandler {
 public:
 
-    void handleClient(string question, string answer);
+    void handleClient(string &question, string &answer) override;
 };
 
 

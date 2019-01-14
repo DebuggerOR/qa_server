@@ -10,7 +10,42 @@
 #include "MyClientHandler.h"
 #include "MyParallelServer.h"
 
+void test(){
+    auto * matrixCreator = new MatrixCreator;
+    Matrix* matrix = matrixCreator->createFromConsole();
+    matrix->displayMat();
+
+    auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
+    solver->setSolverImp(new BFS<Point*>);
+    list<State<Point*>*>* lst = solver->solve(matrix);
+    vector<Point*> vec;
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    Utils utils;
+    cout<<utils.pointsToString(vec)<<endl;
+
+    solver->setSolverImp(new DFS<Point*>);
+    list<State<Point*>*>* lst1 = solver->solve(matrix);
+    vector<Point*> vec1;
+    for (auto &l:(*lst1)) {
+        vec1.push_back(l->getState());
+    }
+    cout<<utils.pointsToString(vec1)<<endl;
+
+    solver->setSolverImp(new BestFirstSearch<Point*>);
+    list<State<Point*>*>* lst2 = solver->solve(matrix);
+    vector<Point*> vec2;
+    for (auto &l:(*lst2)) {
+        vec2.push_back(l->getState());
+    }
+    cout<<utils.pointsToString(vec2)<<endl;
+}
+
+
 int main(int argc, const char *argv[]) {
+ //   test();
+
     ClientHandler* clientHandler = new MyClientHandler();
 
     server_side::Server* server = new MySerialServer();

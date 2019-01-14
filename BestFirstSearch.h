@@ -17,29 +17,7 @@ template <class T>
 class BestFirstSearch  : public Searcher<T> {
 public:
     list<State<T>*>* search(Searchable<T>* searchable);
-
-private:
-    list<State<T>*>* backTrace(State<T>* state, Searchable<T>* searchable);
 };
-
-template<class T>
-list<State<T> *> *BestFirstSearch<T>::backTrace(State<T> *state, Searchable<T> *searchable) {
-    cout<<"Best First Search returns trace"<<endl;
-    auto * trace = new list<State<T>*>;
-
-    while (state != searchable->getInitialState()){
-        if(state == nullptr){
-            cout<<"no path"<<endl;
-            return nullptr;
-        }
-        trace->push_back(state);
-        state = state->getCameFrom();
-    }
-    trace->push_back(searchable->getInitialState());
-
-    return trace;
-}
-
 
 template <class T, class S, class C>
 S& Container(priority_queue<T, S, C>& q) {
@@ -63,6 +41,7 @@ list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
         closed.push_back(s);
 
         if (s == (searchable->getGoalState())) {
+            cout<<"best first search back trace"<<endl;
             return this->backTrace(s, searchable);
         } else {
             list<State<T> *> *adj = searchable->getAllPossibleStates(s);

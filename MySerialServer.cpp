@@ -10,6 +10,7 @@ bool serialStop;
 
 void open(ClientHandler *clientHandler, int port) {
     cout << "start server at port " << port << endl;
+    bool isFirst=true;
     string nextBuffer, connectedBuffer;
     int s = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serv;
@@ -34,27 +35,30 @@ void open(ClientHandler *clientHandler, int port) {
     new_sock = accept(s, (struct sockaddr *) &client, &clilen);
     try {
         while (!serialStop) {
+            cout<<buffer;
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
-            if(buffer!=""){
-                connectedBuffer+=buffer;
-                connectedBuffer+="$";
+            connectedBuffer+=buffer;
+            if(connectedBuffer[connectedBuffer.size()-1]!='$') {
+                connectedBuffer += "$";
             }
             if(!strcmp(buffer,"end")){
-                cout<<connectedBuffer<<endl;
                 string answer;
                 clientHandler->handleClient(connectedBuffer,answer);
                 const char *cstr = answer.c_str();
                 write(new_sock, cstr, answer.size());
                 connectedBuffer="";
+                isFirst=false;
             }
-            if (new_sock < 0) {
-                if (errno == EWOULDBLOCK) {
-                    cout << "timeout!" << endl;
-                    exit(2);
-                } else {
-                    perror("other error");
-                    exit(3);
+            if(!isFirst) {
+                if (new_sock < 0) {
+                    if (errno == EWOULDBLOCK) {
+                        cout << "timeout!" << endl;
+                        serialStop=true;
+                    } else {
+                        perror("other error");
+                        serialStop=true;
+                    }
                 }
             }
         }

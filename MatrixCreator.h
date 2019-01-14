@@ -13,8 +13,9 @@ using namespace std;
 
 class MatrixCreator {
 public:
-    Matrix* createFromString(string input);
-    Matrix* createFromConsole();
+    Matrix *createFromString(string input);
+
+    Matrix *createFromConsole();
 };
 
 #endif //PROJ2222_MATRIXHANDLER_H

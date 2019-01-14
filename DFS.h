@@ -15,7 +15,6 @@ public:
 
 private:
     list<State<T>*>* visit(State<T>* state, list<State<T>*> blacks, list<State<T>*> grays, Searchable<T>* searchable);
-    list<State<T>*>* backTrace(State<T>* state, Searchable<T>* searchable);
 };
 
 
@@ -38,6 +37,7 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
 
     // if state is goal state
     if(searchable->getGoalState() == state){
+        cout<<"dfs back trace"<<endl;
         return this->backTrace(state, searchable);
     }
 
@@ -59,24 +59,6 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
         }
     }
     blacks.push_back(state);
-}
-
-template<class T>
-list<State<T> *> *DFS<T>::backTrace(State<T> *state, Searchable<T> *searchable) {
-    cout<<"DFS returns trace"<<endl;
-    auto * trace = new list<State<T>*>;
-
-    while (state != searchable->getInitialState()){
-        if(state == nullptr){
-            cout<<"no path"<<endl;
-            return nullptr;
-        }
-        trace->push_back(state);
-        state = state->getCameFrom();
-    }
-    trace->push_back(searchable->getInitialState());
-
-    return trace;
 }
 
 
