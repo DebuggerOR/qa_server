@@ -9,23 +9,44 @@
 
 template <class T>
 class AStar : public Searcher<T> {
-    T search(Searchable<T> searchable);
-
+    list<State<T>*>* search(Searchable<T>* searchable);
 };
 
+
 template<class T>
-T AStar<T>::search(Searchable<T> searchable) {
+list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
+    Utils utils;
     list<State<T>*> closed;
     list<State<T>*> open;
+    State<T>* goal = searchable->getGoalState();
 
-    open.push_back(searchable.getInitialState());
+    State<T>* state = searchable->getInitialState();
+    open.push_back(state);
+    state->setCameFrom(NULL);
 
-
-
-
-
-    return Searcher<T>::search(searchable);
+    while (true) {
+        // insert into priority queue
+        list<State<T> *> *adj = searchable->getAllPossibleStates(state);
+        State<T> *best = adj->front();
+        for (auto &a : *adj) {
+            double aDst = a->getCost() + utils.distance(a->getState(), goal->getState());
+            double bestDst = best->getCost() + utils.distance(best->getState(), goal->getState());
+            if (aDst < bestDst) {
+                best = a;
+            }
+        }
+        best->setCameFrom(state);
+        state=best;
+        if(state==goal){
+            return this->backTrace(state, searchable);
+        }
+    }
 }
+
+
+
+
+
 
 /*
  *

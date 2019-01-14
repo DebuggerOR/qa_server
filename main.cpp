@@ -9,6 +9,7 @@
 #include "MatrixCreator.h"
 #include "MyServers.h"
 #include "MyClientHandler.h"
+#include "AStar.h"
 
 void testConsole(){
     auto * matrixCreator = new MatrixCreator;
@@ -16,24 +17,35 @@ void testConsole(){
     matrix->displayMat();
 
     auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
-    solver->setSolverImp(new BFS<Point*>);
-    list<State<Point*>*>* lst = solver->solve(matrix);
-    vector<Point*> vec;
-    for (auto &l:(*lst)) {
-        vec.push_back(l->getState());
-    }
+
+//    solver->setSolverImp(new BFS<Point*>);
+//    list<State<Point*>*>* lst = solver->solve(matrix);
+//    vector<Point*> vec;
+//    for (auto &l:(*lst)) {
+//        vec.push_back(l->getState());
+//    }
+//    Utils utils;
+//    cout<<utils.pointsToString(vec)<<endl;
+//
+//    solver->setSolverImp(new DFS<Point*>);
+//    list<State<Point*>*>* lst1 = solver->solve(matrix);
+//    vector<Point*> vec1;
+//    for (auto &l:(*lst1)) {
+//        vec1.push_back(l->getState());
+//    }
+//    cout<<utils.pointsToString(vec1)<<endl;
+//
+//    solver->setSolverImp(new BestFirstSearch<Point*>);
+//    list<State<Point*>*>* lst2 = solver->solve(matrix);
+//    vector<Point*> vec2;
+//    for (auto &l:(*lst2)) {
+//        vec2.push_back(l->getState());
+//    }
+//    cout<<utils.pointsToString(vec2)<<endl;
+
+
     Utils utils;
-    cout<<utils.pointsToString(vec)<<endl;
-
-    solver->setSolverImp(new DFS<Point*>);
-    list<State<Point*>*>* lst1 = solver->solve(matrix);
-    vector<Point*> vec1;
-    for (auto &l:(*lst1)) {
-        vec1.push_back(l->getState());
-    }
-    cout<<utils.pointsToString(vec1)<<endl;
-
-    solver->setSolverImp(new BestFirstSearch<Point*>);
+    solver->setSolverImp(new AStar<Point*>);
     list<State<Point*>*>* lst2 = solver->solve(matrix);
     vector<Point*> vec2;
     for (auto &l:(*lst2)) {
@@ -60,11 +72,11 @@ void testParallelServer(int port){
 
 
 int main(int argc, const char *argv[]) {
-    //testConsole();
+    testConsole();
 
     //testSerialServer(stoi(argv[1]));
 
-    testParallelServer(stoi(argv[1]));
+    //testParallelServer(stoi(argv[1]));
 
     return 0;
 }

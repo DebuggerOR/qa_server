@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <fstream>
 #include "MatrixCreator.h"
 #include "Utils.h"
 
@@ -85,3 +86,22 @@ Matrix *MatrixCreator::createFromString(string input) {
 
     return matrix;
 }
+
+Matrix *MatrixCreator::createFromFile(string fileName) {
+    string line;
+    string input;
+    ifstream file (fileName);
+
+    if (file.is_open()) {
+        getline (file, line);
+        input += line + "$";
+        while (line != "end") {
+            getline (file, line);
+            input += line + "$";
+        }
+        file.close();
+    }
+
+    return this->createFromString(input);
+}
+

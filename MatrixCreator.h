@@ -16,6 +16,8 @@ public:
     Matrix *createFromString(string input);
 
     Matrix *createFromConsole();
+
+    Matrix *createFromFile(string fileName);
 };
 
 #endif //PROJ2222_MATRIXHANDLER_H

@@ -119,7 +119,7 @@ void openParallel(ClientHandler *clientHandler, int port) {
     socklen_t clilen = sizeof(client);
 
     timeval timeout;
-    timeout.tv_sec = 10000;
+    timeout.tv_sec = 10;
     timeout.tv_usec = 0;
 
     while (!parallelStop) {

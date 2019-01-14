@@ -76,7 +76,6 @@ string Utils::pointsToString(vector<Point *> crdnts) {
             path+="Left,";
         }
     }
-    //path.erase(0);
     path.erase(path.size()-1);
     return path;
 }
