@@ -20,13 +20,14 @@ private:
 template<class T>
 double AStar<T>::fromHere(State<T> *state, State<T>* goal) {
     Utils utils;
-    return utils.distance(state, goal);
+    return utils.distance(state->getState(), goal->getState());
 }
 
 template<class T>
 list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
-    Utils utils;
+    // list of nodes that need to be checked
     list<State<T>*> openList;
+    //list of nodes that have been checked
     list<State<T>*> closedList;
     map<State<T>*, double> toState;
 
@@ -34,169 +35,66 @@ list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
     State<T>* goal = searchable->getGoalState();
 
     openList.push_back(init);
-    toState.insert(pair<State<T>*,double>(init,0));
+    toState[init]=0;
 
     while(!openList.empty()){
-        // find best in open list
+        // greedy choice
         State<T>* best= openList.front();
         for(auto &o : openList){
-            if(this->fromHere(o)+toState.at(o)<this->fromHere(best)+toState.at(best)){
+            if(this->fromHere(o,goal)+toState.at(o)<this->fromHere(best,goal)+toState.at(best)){
                 best=o;
             }
         }
         openList.remove(best);
 
         list<State<T>*>* adj = searchable->getAllPossibleStates(best);
-        for(auto &a : adj){
-            if(best == a){
-                return this->backTrace(a);
+        for(auto &a : *adj) {
+            ++this->evaluatedNodes;
+
+            if (a == goal) {
+                a->setCameFrom(best);
+                return this->backTrace(a, searchable);
             }
 
-
-
-
-
-
-            bool isInOpen = false;
-            for (auto &o : openList) {
-                if(o == a){
-                    isInOpen = true;
-                    break;
-                }
-            }
-
+            // if in the closed list ignore
             bool isInClosed = false;
             for (auto &c : closedList) {
-                if(c == a){
+                if (c == a) {
                     isInClosed = true;
                     break;
                 }
             }
-            if(isInClosed){
-                if(this->fromHere(a)+toState.at(a)<this->fromHere(best)+toState.at(best)){
-                    continue;
-                }
-            }
-
-
-            if(isInOpen){
+            if (isInClosed) {
                 continue;
             }
 
-
+            // if already in open list, check if the total score
+            // when we use the current generated path to get there
+            // if it is, update its score and parent
+            bool isInOpen = false;
+            for (auto &o : openList) {
+                if (o == a) {
+                    isInOpen = true;
+                    break;
+                }
+            }
+            if (isInOpen) {
+                if (this->fromHere(best,goal) + toState[best] + a->getCost() < this->fromHere(a,goal) + toState[a]) {
+                    a->setCameFrom(best);
+                    toState[a]=toState[best]+a->getCost();
+                    best = a;
+                }
+                // if not in the open list add it and compute its score
+            } else {
+                a->setCameFrom(best);
+                toState[a]=toState[best]+a->getCost();
+                openList.push_back(a);
+            }
         }
-
         closedList.push_back(best);
     }
 }
 
-
-
-
-
-
-
-//3.  while the open list is not empty
-//        a) find the node with the least f on
-//the open list, call it "q"
-//
-//b) pop q off the open list
-//
-//c) generate q's 8 successors and set their
-//parents to q
-//
-//        d) for each successor
-//i) if successor is the goal, stop search
-//        successor.g = q.g + distance between
-//        successor and q
-//        successor.h = distance from goal to
-//successor (This can be done using many
-//ways, we will discuss three heuristics-
-//Manhattan, Diagonal and Euclidean
-//Heuristics)
-//
-//successor.f = successor.g + successor.h
-//
-//ii) if a node with the same position as
-//        successor is in the OPEN list which has a
-//lower f than successor, skip this successor
-//
-//        iii) if a node with the same position as
-//        successor  is in the CLOSED list which has
-//        a lower f than successor, skip this successor
-//        otherwise, add  the node to the open list
-//end (for loop)
-//
-//e) push q on the closed list
-//end (while loop)
-
-
-/*
- *
-function A_Star(start, goal)
-    // The set of nodes already evaluated
-    closedSet := {}
-
-    // The set of currently discovered nodes that are not evaluated yet.
-    // Initially, only the start node is known.
-    openSet := {start}
-
-    // For each node, which node it can most efficiently be reached from.
-    // If a node can be reached from many nodes, cameFrom will eventually contain the
-    // most efficient previous step.
-    cameFrom := an empty map
-
-    // For each node, the cost of getting from the start node to that node.
-    gScore := map with default value of Infinity
-
-    // The cost of going from start to start is zero.
-    gScore[start] := 0
-
-    // For each node, the total cost of getting from the start node to the goal
-    // by passing by that node. That value is partly known, partly heuristic.
-    fScore := map with default value of Infinity
-
-    // For the first node, that value is completely heuristic.
-    fScore[start] := heuristic_cost_estimate(start, goal)
-
-    while openSet is not empty
-        current := the node in openSet having the lowest fScore[] value
-        if current = goal
-            return reconstruct_path(cameFrom, current)
-
-        openSet.Remove(current)
-        closedSet.Add(current)
-
-        for each neighbor of current
-            if neighbor in closedSet
-                continue		// Ignore the neighbor which is already evaluated.
-
-            // The distance from start to a neighbor
-            tentative_gScore := gScore[current] + dist_between(current, neighbor)
-
-            if neighbor not in openSet	// Discover a new node
-                openSet.Add(neighbor)
-            else if tentative_gScore >= gScore[neighbor]
-                continue;
-
-            // This path is the best until now. Record it!
-            cameFrom[neighbor] := current
-            gScore[neighbor] := tentative_gScore
-            fScore[neighbor] := gScore[neighbor] + heuristic_cost_estimate(neighbor, goal)
- *
- *
- *
- *
- * function reconstruct_path(cameFrom, current)
-    total_path := {current}
-    while current in cameFrom.Keys:
-        current := cameFrom[current]
-        total_path.append(current)
-    return total_path
-
- *
- *
- */
 
 
 #endif //PROJ2222_ASTAR_H

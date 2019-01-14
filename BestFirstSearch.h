@@ -19,6 +19,9 @@ public:
     list<State<T>*>* search(Searchable<T>* searchable);
 };
 
+#ifndef CONTAINER
+#define CONTAINER
+
 template <class T, class S, class C>
 S& Container(priority_queue<T, S, C>& q) {
     struct HackedQueue : private priority_queue<T, S, C> {
@@ -28,6 +31,8 @@ S& Container(priority_queue<T, S, C>& q) {
     };
     return HackedQueue::Container(q);
 }
+
+#endif
 
 template<class T>
 list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {

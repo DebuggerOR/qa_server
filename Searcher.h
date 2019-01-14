@@ -7,6 +7,7 @@
 
 
 #include <iostream>
+#include <queue>
 #include "Solver.h"
 #include "Searchable.h"
 #include "SolverImp.h"
@@ -63,5 +64,6 @@ list<State<T> *> *Searcher<T>::backTrace(State<T> *state, Searchable<T> *searcha
 
     return trace;
 }
+
 
 #endif //PROJ2222_SEARCHER_H
