@@ -62,9 +62,9 @@ void testParallelServer(int port){
 int main(int argc, const char *argv[]) {
     //testConsole();
 
-    //testSerialServer(stoi(argv[1]));
+    testSerialServer(stoi(argv[1]));
 
-    testParallelServer(stoi(argv[1]));
+    //testParallelServer(stoi(argv[1]));
 
     return 0;
 }

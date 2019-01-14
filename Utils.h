@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <math.h>
 #include "Point.h"
 
 
@@ -21,6 +22,8 @@ public:
     string pointsToString(vector<Point*> crdnts);
 
     Point* stringToPoint(string crdnt);
+
+    double distance(Point* p1, Point* p2);
 };
 
 
