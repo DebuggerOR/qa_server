@@ -5,12 +5,12 @@
 #include "BFS.h"
 #include "Utils.h"
 #include "BestFirstSearch.h"
-#include "MySerialServer.h"
+#include "MyServers.h"
 #include "MatrixCreator.h"
+#include "MyServers.h"
 #include "MyClientHandler.h"
-#include "MyParallelServer.h"
 
-void test(){
+void testConsole(){
     auto * matrixCreator = new MatrixCreator;
     Matrix* matrix = matrixCreator->createFromConsole();
     matrix->displayMat();
@@ -42,15 +42,29 @@ void test(){
     cout<<utils.pointsToString(vec2)<<endl;
 }
 
+void testSerialServer(int port){
+    ClientHandler* clientHandler = new MyClientHandler();
+
+    server_side::Server* server = new MyServers();
+
+    server->start(port, clientHandler);
+}
+
+void testParallelServer(int port){
+    ClientHandler* clientHandler = new MyClientHandler();
+
+    server_side::Server* server = new MyParallelServer();
+
+    server->start(port, clientHandler);
+}
+
 
 int main(int argc, const char *argv[]) {
-    test();
+    //testConsole();
 
- //   ClientHandler* clientHandler = new MyClientHandler();
+    //testSerialServer(stoi(argv[1]));
 
-   // server_side::Server* server = new MySerialServer();
-
-    //server->start(stoi(argv[1]), clientHandler);
+    testParallelServer(stoi(argv[1]));
 
     return 0;
 }
@@ -65,7 +79,7 @@ namespace server_side {
                 // if get arguments
                 if (argc > 1) {
                     // server
-                    server_side::Server *server = new MySerialServer;
+                    server_side::Server *server = new MyServers;
 
                     // cache manager
                     CacheManager<string, string> *cacheManager = new FileCacheManager<string, string>;

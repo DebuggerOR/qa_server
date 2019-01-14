@@ -5,4 +5,4 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_CXX_FLAGS -pthread)
 
-add_executable(proj2222 main.cpp CacheManager.cpp ClientHandler.cpp FileCacheManager.cpp MyParallelServer.cpp MySerialServer.cpp MyTestClientHandler.cpp Server.cpp Solver.cpp State.cpp StringReverser.cpp Searchable.cpp TestSearcher.cpp SearchSolver.cpp SolverImp.cpp MatrixCreator.cpp Matrix.cpp Utils.cpp Point.cpp MyClientHandler.cpp)
+add_executable(proj2222 main.cpp CacheManager.cpp ClientHandler.cpp FileCacheManager.cpp MyTestClientHandler.cpp Server.cpp Solver.cpp State.cpp StringReverser.cpp Searchable.cpp TestSearcher.cpp SearchSolver.cpp SolverImp.cpp MatrixCreator.cpp Matrix.cpp Utils.cpp Point.cpp MyClientHandler.cpp)
