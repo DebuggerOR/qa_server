@@ -26,13 +26,17 @@ Matrix::Matrix(int rows, int cols) {
 }
 
 void Matrix::displayMat() {
-    cout<<"the mat is:"<<endl;
+    cout << "the mat is:" << endl;
     for (int i = 0; i < this->numRows; ++i) {
         for (int j = 0; j < this->numCols; ++j) {
-            cout<<this->rows->at(i)->at(j)->getCost()<<'\t';
+            cout << this->rows->at(i)->at(j)->getCost() << '\t';
         }
-        cout<<endl;
+        cout << endl;
     }
+    cout << "entrance:\t" << this->entrance->getState()->getRow()
+         << "," << this->entrance->getState()->getCol() << endl;
+    cout << "exit:\t\t" << this->exit->getState()->getRow()
+         << "," << this->exit->getState()->getCol() << endl;
 }
 
 State<Point*>* Matrix::getInitialState() {
@@ -84,6 +88,7 @@ void Matrix::setInitialState(int row, int col) {
 void Matrix::setGoalState(int row, int col) {
     this->exit=this->rows->at(row)->at(col);
 }
+
 
 
 

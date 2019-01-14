@@ -16,25 +16,39 @@ class AStar : public Searcher<T> {
 template<class T>
 list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
     Utils utils;
-    list<State<T>*> closed;
-    list<State<T>*> open;
+    list<State<T>*> visited;
     State<T>* goal = searchable->getGoalState();
 
     State<T>* state = searchable->getInitialState();
-    open.push_back(state);
+    visited.push_back(state);
     state->setCameFrom(NULL);
 
     while (true) {
-        // insert into priority queue
         list<State<T> *> *adj = searchable->getAllPossibleStates(state);
-        State<T> *best = adj->front();
+        State<T> *best = NULL;
         for (auto &a : *adj) {
-            double aDst = a->getCost() + utils.distance(a->getState(), goal->getState());
-            double bestDst = best->getCost() + utils.distance(best->getState(), goal->getState());
-            if (aDst < bestDst) {
-                best = a;
+            bool isVisited = false;
+            for (auto &v : visited) {
+                if(a == v){
+                    isVisited = true;
+                }
+            }
+
+            if(!isVisited) {
+                double aDst;
+                double bestDst;
+                if(best!=NULL) {
+                    aDst = a->getCost() + utils.distance(a->getState(), goal->getState());
+                    bestDst = best->getCost() + utils.distance(best->getState(), goal->getState());
+                }
+                if (best==NULL || aDst < bestDst) {
+                    best = a;
+                    visited.push_back(a);
+                    ++this->evaluatedNodes;
+                }
             }
         }
+        cout<<best->getState()->getRow()<<","<<best->getState()->getCol()<<endl;
         best->setCameFrom(state);
         state=best;
         if(state==goal){

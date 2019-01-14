@@ -18,40 +18,38 @@ void testConsole(){
 
     auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
 
-//    solver->setSolverImp(new BFS<Point*>);
-//    list<State<Point*>*>* lst = solver->solve(matrix);
-//    vector<Point*> vec;
-//    for (auto &l:(*lst)) {
-//        vec.push_back(l->getState());
-//    }
-//    Utils utils;
-//    cout<<utils.pointsToString(vec)<<endl;
-//
-//    solver->setSolverImp(new DFS<Point*>);
-//    list<State<Point*>*>* lst1 = solver->solve(matrix);
-//    vector<Point*> vec1;
-//    for (auto &l:(*lst1)) {
-//        vec1.push_back(l->getState());
-//    }
-//    cout<<utils.pointsToString(vec1)<<endl;
-//
-//    solver->setSolverImp(new BestFirstSearch<Point*>);
-//    list<State<Point*>*>* lst2 = solver->solve(matrix);
-//    vector<Point*> vec2;
-//    for (auto &l:(*lst2)) {
-//        vec2.push_back(l->getState());
-//    }
-//    cout<<utils.pointsToString(vec2)<<endl;
-
-
+    solver->setSolverImp(new BFS<Point*>);
+    list<State<Point*>*>* lst = solver->solve(matrix);
+    vector<Point*> vec;
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
     Utils utils;
-    solver->setSolverImp(new AStar<Point*>);
+    cout<<utils.pointsToString(vec)<<endl;
+
+    solver->setSolverImp(new DFS<Point*>);
+    list<State<Point*>*>* lst1 = solver->solve(matrix);
+    vector<Point*> vec1;
+    for (auto &l:(*lst1)) {
+        vec1.push_back(l->getState());
+    }
+    cout<<utils.pointsToString(vec1)<<endl;
+
+    solver->setSolverImp(new BestFirstSearch<Point*>);
     list<State<Point*>*>* lst2 = solver->solve(matrix);
     vector<Point*> vec2;
     for (auto &l:(*lst2)) {
         vec2.push_back(l->getState());
     }
     cout<<utils.pointsToString(vec2)<<endl;
+
+    solver->setSolverImp(new AStar<Point*>);
+    list<State<Point*>*>* lst3 = solver->solve(matrix);
+    vector<Point*> vec3;
+    for (auto &l:(*lst3)) {
+        vec2.push_back(l->getState());
+    }
+    cout<<utils.pointsToString(vec3)<<endl;
 }
 
 void testFile(string name){
@@ -91,7 +89,7 @@ void testParallelServer(int port){
 int main(int argc, const char *argv[]) {
     //testConsole();
 
-    testFile("graphs1");
+    testFile("graphs2");
 
     //testSerialServer(stoi(argv[1]));
 

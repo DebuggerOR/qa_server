@@ -83,5 +83,9 @@ string Utils::pointsToString(vector<Point *> crdnts) {
 double Utils::distance(Point *p1, Point *p2) {
     double dy = p1->getRow() - p2->getRow();
     double dx = p1->getCol() - p2->getCol();
-    return sqrt(dy * dy - dx * dx);
+    return sqrt(dy * dy + dx * dx);
+}
+
+bool Utils::isDig(char c) {
+    return (c>='0' && c<='9');
 }

@@ -24,6 +24,8 @@ public:
     Point* stringToPoint(string crdnt);
 
     double distance(Point* p1, Point* p2);
+
+    bool isDig(char c);
 };
 
 
