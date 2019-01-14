@@ -44,13 +44,13 @@ void test(){
 
 
 int main(int argc, const char *argv[]) {
- //   test();
+    test();
 
-    ClientHandler* clientHandler = new MyClientHandler();
+ //   ClientHandler* clientHandler = new MyClientHandler();
 
-    server_side::Server* server = new MySerialServer();
+   // server_side::Server* server = new MySerialServer();
 
-    server->start(stoi(argv[1]), clientHandler);
+    //server->start(stoi(argv[1]), clientHandler);
 
     return 0;
 }

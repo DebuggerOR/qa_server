@@ -12,12 +12,9 @@ Matrix* MatrixCreator::createFromConsole() {
 
     cout << "type your mat (to finish type 'end')" << endl;
 
-    while (true) {
+    while (line != "end") {
         // get line each time
         getline(cin, line);
-
-        // read until type 'quit'
-        if (line == "end") { break; }
 
         // add '$' after each line
         input += line + "$";
