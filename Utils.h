@@ -5,8 +5,11 @@
 
 #include <string>
 #include <vector>
+#include <list>
 #include <math.h>
 #include "Point.h"
+#include "State.h"
+
 
 
 using namespace std;
@@ -23,9 +26,13 @@ public:
 
     Point* stringToPoint(string crdnt);
 
-    double distance(Point* p1, Point* p2);
+    double walkDistance(Point* p1, Point* p2);
+
+    double airDistance(Point* p1, Point* p2);
 
     bool isDig(char c);
+
+    double pathWeight(list<State<Point*>*>* path);
 };
 
 

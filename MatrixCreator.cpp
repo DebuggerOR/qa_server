@@ -110,10 +110,10 @@ Matrix *MatrixCreator::createFromFile(string fileName) {
     ifstream file (fileName);
 
     if (file.is_open()) {
-        getline (file, line);
+        getline(file, line);
         input += line + "$";
-        while (line != "end") {
-            getline (file, line);
+        while (line.find("end") != string::npos) {
+            getline(file, line);
             input += line + "$";
         }
         file.close();

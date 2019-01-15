@@ -19,13 +19,17 @@
 
 using namespace server_side;
 
+
 bool serialStop;
 bool parallelStop;
 
-void serial(ClientHandler *clientHandler, int new_sock) {
-    cout << "start server" << endl;
+
+void serial(ClientHandler *clientHandler, int new_sock, bool* isTimeOut) {
+    cout << "start" << endl;
     string nextBuffer, connectedBuffer;
     char buffer[4096];
+
+    *isTimeOut = false;
 
     try {
         while(!serialStop) {
@@ -47,19 +51,21 @@ void serial(ClientHandler *clientHandler, int new_sock) {
             }
         }
     } catch (...) {
-        cout << "connection stopped" << endl;
     }
     close(new_sock);
-    cout << "end server" << endl;
+    cout << "stop" << endl;
 }
 
-void parallel(ClientHandler *clientHandler, int new_sock) {
-    cout << "start server" << endl;
+
+void parallel(ClientHandler *clientHandler, int new_sock, bool* isRun) {
+    cout << "start" << endl;
     string nextBuffer, connectedBuffer;
     char buffer[4096];
 
+    *isRun = true;
+
     try {
-        while(!parallelStop) {
+        while (!parallelStop) {
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
             connectedBuffer += buffer;
@@ -68,8 +74,8 @@ void parallel(ClientHandler *clientHandler, int new_sock) {
             }
             if (!strcmp(buffer, "end")) {
                 string answer;
-                if(connectedBuffer[0]=='$'){
-                    connectedBuffer[0]=' ';
+                if (connectedBuffer[0] == '$') {
+                    connectedBuffer[0] = ' ';
                 }
                 clientHandler->handleClient(connectedBuffer, answer);
                 const char *cstr = answer.c_str();
@@ -78,11 +84,12 @@ void parallel(ClientHandler *clientHandler, int new_sock) {
             }
         }
     } catch (...) {
-        cout << "connection stopped" << endl;
     }
     close(new_sock);
-    cout << "end server" << endl;
+    *isRun = false;
+    cout << "stop" << endl;
 }
+
 
 void openSerial(ClientHandler *clientHandler, int port) {
     int s = socket(AF_INET, SOCK_STREAM, 0);
@@ -90,7 +97,8 @@ void openSerial(ClientHandler *clientHandler, int port) {
     serv.sin_addr.s_addr = INADDR_ANY;
     serv.sin_port = htons(port);
     serv.sin_family = AF_INET;
-    bool isFirst=true;
+    bool* isTimeOut = new bool;
+    *isTimeOut = false;
 
     timeval timeout;
     timeout.tv_sec = 1;
@@ -101,20 +109,17 @@ void openSerial(ClientHandler *clientHandler, int port) {
 
     while (!serialStop) {
         try {
-
             int new_sock;
             listen(s, 20000);
             struct sockaddr_in client;
             socklen_t clilen = sizeof(client);
-
             new_sock = accept(s, (struct sockaddr *) &client, &clilen);
 
-            if (!isFirst) {
+            if(*isTimeOut) {
                 if (new_sock < 0) {
                     if (errno == EWOULDBLOCK) {
                         cout << "timeout!" << endl;
                         break;
-
                     } else {
                         perror("other error");
                         break;
@@ -122,10 +127,10 @@ void openSerial(ClientHandler *clientHandler, int port) {
                 }
             }
 
-            if(new_sock>=0) {
-                thread* t = new thread(serial, clientHandler, new_sock);
+            if (new_sock >= 0) {
+                thread *t = new thread(serial, clientHandler, new_sock, isTimeOut);
                 t->join();
-                isFirst = false;
+                *isTimeOut = true;
             }
         } catch (...) {
             cout << "connection with client stopped" << endl;
@@ -134,18 +139,18 @@ void openSerial(ClientHandler *clientHandler, int port) {
 }
 
 
-
 void openParallel(ClientHandler *clientHandler, int port) {
     int s = socket(AF_INET, SOCK_STREAM, 0);
     struct sockaddr_in serv;
     serv.sin_addr.s_addr = INADDR_ANY;
     serv.sin_port = htons(port);
     serv.sin_family = AF_INET;
-    bool isFirst=true;
-    queue<thread*> threads;
+    queue<thread *> threads;
+    list<bool*> isRunning;
+    bool* isFirst = new bool;
+    *isFirst = true;
 
     bind(s, (sockaddr *) &serv, sizeof(serv));
-
     listen(s, 20000);
     struct sockaddr_in client;
     socklen_t clilen = sizeof(client);
@@ -157,16 +162,21 @@ void openParallel(ClientHandler *clientHandler, int port) {
     while (!parallelStop) {
         try {
             int new_sock;
-
             setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (char *) &timeout, sizeof(timeout));
             new_sock = accept(s, (struct sockaddr *) &client, &clilen);
 
-            if (!isFirst) {
+            bool isTimeOut = !(*isFirst);
+            for(auto &r : isRunning){
+                if(*r){
+                    isTimeOut= false;
+                    break;
+                }
+            }
+            if(isTimeOut) {
                 if (new_sock < 0) {
                     if (errno == EWOULDBLOCK) {
                         cout << "timeout!" << endl;
                         break;
-
                     } else {
                         perror("other error");
                         break;
@@ -174,15 +184,17 @@ void openParallel(ClientHandler *clientHandler, int port) {
                 }
             }
 
-            if(new_sock>=0) {
-                threads.push(new thread(parallel, clientHandler, new_sock));
-                isFirst = false;
+            if (new_sock >= 0) {
+                bool* isRun = new bool;
+                isRunning.push_back(isRun);
+                threads.push(new thread(parallel, clientHandler, new_sock, isRun));
+                *isFirst= false;
             }
         } catch (...) {
             cout << "connection with client stopped" << endl;
         }
     }
-    while (!threads.empty()){
+    while (!threads.empty()) {
         threads.front()->join();
         threads.pop();
     }

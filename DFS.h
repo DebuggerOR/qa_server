@@ -5,6 +5,7 @@
 
 
 #include <iostream>
+#include <map>
 #include "Searcher.h"
 
 template <class T>
@@ -14,26 +15,21 @@ public:
     list<State<T>*>* search(Searchable<T>* searchable);
 
 private:
-    list<State<T>*>* visit(State<T>* state, list<State<T>*> blacks, list<State<T>*> grays, Searchable<T>* searchable);
+    list<State<T>*>* visit(State<T> *state, map<State<T>*,char>* color, Searchable<T>* searchable);
 };
 
 
-/**
- * DFS according Corman
- */
-
 template<class T>
 list<State<T>*>* DFS<T>::search(Searchable<T>* searchable) {
-    this->evaluatedNodes=1;
-    list<State<T>*> blacks;
-    list<State<T>*> grays;
+    this->evaluatedNodes=0;
+    map<State<T>*,char>* color;
 
-    return this->visit(searchable->getInitialState(), blacks, grays, searchable);
+    return this->visit(searchable->getInitialState(), color, searchable);
 }
 
 template<class T>
 list<State<T> *> *
-DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, Searchable<T> *searchable) {
+DFS<T>::visit(State<T> *state, map<State<T>*,char>* color, Searchable<T> *searchable) {
     ++this->evaluatedNodes;
 
     // if state is goal state
@@ -41,23 +37,17 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
         return this->backTrace(state, searchable);
     }
 
-    list<State<T>*> adj =  *(searchable->getAllPossibleStates(state));
-    grays.push_back(state);
+    list<State<T>*>* adj =  searchable->getAllPossibleStates(state);
+    color->insert(pair<State<T>*,char>(state,'g'));
 
-    for(auto &a : adj) {
-        bool isWhite = true;
-        for (auto &g : grays) {
-            if(a == g){
-                isWhite= false;
-            }
-        }
-
-        if(isWhite) {
+    for(auto &a : *adj) {
+        // white iff not marked
+        if(!color->count(a)) {
             a->setCameFrom(state);
-            return this->visit(a, blacks, grays, searchable);
+            return this->visit(a, color, searchable);
         }
     }
-    blacks.push_back(state);
+    color->at(state)='b';
 }
 
 

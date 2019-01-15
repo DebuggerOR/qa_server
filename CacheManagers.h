@@ -80,7 +80,7 @@ void FileCacheManager<Problem, Solution>::load() {
                 ++i;
             }
 
-            this->solutions.insert(pair<string,string>(question,answer));
+            this->solutions.insert(pair<string, string>(question, answer));
         }
         file.close();
     }

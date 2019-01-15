@@ -27,6 +27,8 @@ public:
 
 template<class T>
 list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
+    this->evaluatedNodes=0;
+
     // if initial case is goal state
     if(searchable->getInitialState() == searchable->getGoalState()){
         return this->backTrace(searchable->getInitialState(), searchable);

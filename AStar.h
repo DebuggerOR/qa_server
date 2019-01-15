@@ -20,11 +20,13 @@ private:
 template<class T>
 double AStar<T>::fromHere(State<T> *state, State<T>* goal) {
     Utils utils;
-    return utils.distance(state->getState(), goal->getState());
+    return utils.walkDistance(state->getState(), goal->getState());
 }
 
 template<class T>
 list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
+    this->evaluatedNodes=0;
+
     // list of nodes that need to be checked
     list<State<T>*> openList;
     //list of nodes that have been checked
@@ -38,7 +40,6 @@ list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
     toState[init]=0;
 
     while(!openList.empty()){
-        // greedy choice
         State<T>* best= openList.front();
         for(auto &o : openList){
             if(this->fromHere(o,goal)+toState.at(o)<this->fromHere(best,goal)+toState.at(best)){

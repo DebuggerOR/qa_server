@@ -20,141 +20,80 @@ public:
 };
 
 
-//template <class T, class S, class C>
-//S& Container(priority_queue<T, S, C>& q) {
-//    struct HackedQueue : private priority_queue<T, S, C> {
-//        static S& Container(priority_queue<T, S, C>& q) {
-//            return q.*&HackedQueue::c;
-//        }
-//    };
-//    return HackedQueue::Container(q);
-//}
-
-template<typename T>
-class custom_priority_queue : public std::priority_queue<T, std::vector<T>>
-{
-public:
-
-    bool remove(const T& value) {
-        auto it = std::find(this->c.begin(), this->c.end(), value);
-        if (it != this->c.end()) {
-            this->c.erase(it);
-            std::make_heap(this->c.begin(), this->c.end(), this->comp);
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-};
-
 template<class T>
 list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
-    // if initial case is goal state
-    if (searchable->getInitialState() == searchable->getGoalState()) {
-        return this->backTrace(searchable->getInitialState(), searchable);
-    }
+    this->evaluatedNodes=0;
 
-    list<State<T> *> blacks;
-    list<State<T> *> grays;
-    custom_priority_queue<State<T> *> myQueue;
-    myQueue.push(searchable->getInitialState());
+    // list of nodes that need to be checked
+    list<State<T>*> openList;
+    //list of nodes that have been checked
+    list<State<T>*> closedList;
+    map<State<T>*, double> toState;
 
-    while (!myQueue.empty()) {
-        State<T> *state = myQueue.top();
-        myQueue.pop();
+    State<T>* init = searchable->getInitialState();
+    State<T>* goal = searchable->getGoalState();
+
+    openList.push_back(init);
+    toState[init]=0;
+
+    while(!openList.empty()){
+        State<T>* best= openList.front();
+        for(auto &o : openList){
+            if(toState.at(o)<toState.at(best)){
+                best=o;
+            }
+        }
+        openList.remove(best);
+        closedList.push_back(best);
         ++this->evaluatedNodes;
 
-        // if state is goal state
-        if (searchable->getGoalState() == state) {
-            return this->backTrace(state, searchable);
-        }
 
-        list<State<T> *> adj = *(searchable->getAllPossibleStates(state));
+        list<State<T>*>* adj = searchable->getAllPossibleStates(best);
+        for(auto &a : *adj) {
+            if (a == goal) {
+                a->setCameFrom(best);
+                return this->backTrace(a, searchable);
+            }
 
-        for (auto &a : adj) {
-            bool isWhite = true;
-            for (auto &g : grays) {
-                if (a == g) {
-                    isWhite = false;
+            // if in the closed list ignore
+            bool isInClosed = false;
+            for (auto &c : closedList) {
+                if (c == a) {
+                    isInClosed = true;
+                    break;
                 }
             }
+            if (isInClosed) {
+                continue;
+            }
 
-            if (isWhite) {
-                grays.push_back(a);
-                a->setCameFrom(state);
-                myQueue.push(a);
+            // if already in open list, check if the total score
+            // when we use the current generated path to get there
+            // if it is, update its score and parent
+            bool isInOpen = false;
+            for (auto &o : openList) {
+                if (o == a) {
+                    isInOpen = true;
+                    break;
+                }
+            }
+            if (isInOpen) {
+                if (toState[best] + a->getCost() < toState[a]) {
+                    a->setCameFrom(best);
+                    toState[a]=toState[best]+a->getCost();
+                    best = a;
+                }
+                // if not in the open list add it and compute its score
+            } else {
+                a->setCameFrom(best);
+                toState[a]=toState[best]+a->getCost();
+                openList.push_back(a);
             }
         }
-
-        blacks.push_back(state);
+        closedList.push_back(best);
     }
 }
 
-
-
-
-
-
-
-//    priority_queue<State<T> *> open;
-//
-//    open.push(searchable->getInitialState());
-//    list<State<T> *> closed;
-//    while (!open.empty()) {
-//        State<T> *s = open.top();
-//        open.pop();
-//        closed.push_back(s);
-//
-//        if (s == (searchable->getGoalState())) {
-//            cout<<"best first search back trace"<<endl;
-//            return this->backTrace(s, searchable);
-//        } else {
-//            list<State<T> *> *adj = searchable->getAllPossibleStates(s);
-//            for (auto &a : *adj) {
-//                bool isInOpen = false;
-//                bool isInClosed = false;
-//                vector<State<T>*> &vec = Container(open);
-//                for (auto &v : vec) {
-//                    if (v == a) {
-//                        isInOpen = true;
-//                    }
-//                }
-//                for (auto &v : closed) {
-//                    if (v == a) {
-//                        isInClosed = true;
-//                    }
-//                }
-//
-//
-//                if (!isInClosed && !isInOpen) {
-//                    a->setCameFrom(s);
-//                    open.push(a);
-//                } else {
-//                    if (a->getCost() > (s->getCost() + 1)) {
-//                        a->setCost(s->getCost() + 1);
-//                        a->setCameFrom(s);
-//                    }
-//                    if (!isInOpen) {
-//                        open.push(a);
-//                    }
-//                    //todo Otherwise, adjust its priority in OPEN??
-//                }
-//
-//
-////                if (!isInOpen && !isInClosed) {
-////                    a->setCameFrom(s);
-////                    open.push(s);
-////                    } else {
-////                    // this path is better than prev
-////                    if (a->getCost() > s->getCost() + 1) {
-////                        if (!isInOpen) {
-////                            open.push(a);
-////                        } else {
-////                            a->setCost(s->getCost() + 1);
-////                        }
-////                    }
-////                }
 
 
 

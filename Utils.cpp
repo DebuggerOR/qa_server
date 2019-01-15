@@ -80,12 +80,29 @@ string Utils::pointsToString(vector<Point *> crdnts) {
     return path;
 }
 
-double Utils::distance(Point *p1, Point *p2) {
+bool Utils::isDig(char c) {
+    return (c>='0' && c<='9');
+}
+
+double Utils::pathWeight(list<State<Point *> *> *path) {
+    double weight=0;
+    vector<State<Point *> *> vec(begin(*path),end(*path));
+
+    for(int i=0; i<vec.size()-1; ++i){
+        weight+=vec[i]->getCost();
+    }
+
+    return weight;
+}
+
+double Utils::walkDistance(Point *p1, Point *p2) {
     double dy = p1->getRow() - p2->getRow();
     double dx = p1->getCol() - p2->getCol();
     return sqrt(dy * dy + dx * dx);
 }
 
-bool Utils::isDig(char c) {
-    return (c>='0' && c<='9');
+double Utils::airDistance(Point *p1, Point *p2) {
+    double dy = abs(p1->getRow() - p2->getRow());
+    double dx = abs(p1->getCol() - p2->getCol());
+    return dx+dy;
 }

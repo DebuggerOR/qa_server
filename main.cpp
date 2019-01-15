@@ -72,6 +72,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << dfs->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest bfs\n" << endl;
@@ -84,6 +85,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << bfs->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest best\n" << endl;
@@ -96,6 +98,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << best->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest a star\n" << endl;
@@ -108,6 +111,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << a->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 }
 
@@ -140,7 +144,7 @@ int main(int argc, const char *argv[]) {
 
     //testConsole();
 
-    //testFile("graphs2");
+    //testFile("graphs15.txt");
 
     //testSerialServer(stoi(argv[1]));
 
@@ -152,34 +156,3 @@ int main(int argc, const char *argv[]) {
 
 
 
-//namespace server_side {
-//    namespace boot {
-//
-//        class Main {
-//
-//        public:
-//            int main(int argc, const char *argv[]) {
-//                // if get arguments
-//                if (argc > 1) {
-//                    // server
-//                    server_side::Server *server = new MySerialServer;
-//
-//                    // cache manager
-//                    CacheManager<string, string> *cacheManager = new FileCacheManager<string, string>;
-//
-//                    // solver
-//                    Solver<string, string> *solver = new Solver<string, string>(new StringReverser);
-//
-//                    // client handler
-//                    ClientHandler *clientHandler = new MyTestClientHandler<string, string>(cacheManager, solver);
-//
-//                    // start server
-//                    server->start(stoi(argv[0]), clientHandler);
-//                }
-//
-//                return 0;
-//
-//            }
-//        };
-//    }
-//}
