@@ -112,7 +112,7 @@ Matrix *MatrixCreator::createFromFile(string fileName) {
     if (file.is_open()) {
         getline(file, line);
         input += line + "$";
-        while (line.find("end") != string::npos) {
+        while (line.find("end") == string::npos) {
             getline(file, line);
             input += line + "$";
         }

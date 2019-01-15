@@ -72,7 +72,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << dfs->getNumberOfNodesEvaluated() << endl;
-    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    cout << "weight:\t\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest bfs\n" << endl;
@@ -85,7 +85,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << bfs->getNumberOfNodesEvaluated() << endl;
-    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    cout << "weight:\t\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest best\n" << endl;
@@ -98,7 +98,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << best->getNumberOfNodesEvaluated() << endl;
-    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    cout << "weight:\t\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 
     cout << "\ntest a star\n" << endl;
@@ -111,7 +111,7 @@ void testFile(string name) {
     }
     cout << utils.pointsToString(vec) << endl;
     cout << "visited:\t" << a->getNumberOfNodesEvaluated() << endl;
-    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    cout << "weight:\t\t" << utils.pathWeight(lst) << endl;
     vec.clear();
 }
 
@@ -144,11 +144,11 @@ int main(int argc, const char *argv[]) {
 
     //testConsole();
 
-    //testFile("graphs15.txt");
+    testFile("graphs60.txt");
 
     //testSerialServer(stoi(argv[1]));
 
-    testParallelServer(stoi(argv[1]));
+    //testParallelServer(stoi(argv[1]));
 
     return 0;
 }

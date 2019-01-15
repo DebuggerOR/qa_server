@@ -21,10 +21,6 @@ public:
     list<State<T>*>* search(Searchable<T>* searchable);
 };
 
-/**
- * BFS according Corman
- */
-
 template<class T>
 list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
     this->evaluatedNodes=0;
@@ -38,35 +34,29 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
     list<State<T>*> grays;
     queue<State<T>*> myQueue;
     myQueue.push(searchable->getInitialState());
+    map<State<T>*,char>* colors = new map<State<T>*,char>;
 
     while (!myQueue.empty()) {
         State<T>* state = myQueue.front();
-        ++this->evaluatedNodes;
+        myQueue.pop();
 
         // if state is goal state
         if(searchable->getGoalState() == state){
             return this->backTrace(state, searchable);
         }
 
-        list<State<T>*> adj = *(searchable->getAllPossibleStates(state));
+        list<State<T>*>* adj = searchable->getAllPossibleStates(state);
 
-        for(auto &a : adj){
-            bool isWhite = true;
-            for (auto &g : grays) {
-                if(a == g){
-                    isWhite= false;
-                }
-            }
-
-            if (isWhite){
-                grays.push_back(a);
+        for(auto &a : *adj){
+            if(!colors->count(a)) {
+                colors->insert(pair<State<T>*,char>(a,'g'));
                 a->setCameFrom(state);
                 myQueue.push(a);
             }
         }
 
-        myQueue.pop();
-        blacks.push_back(state);
+        ++this->evaluatedNodes;
+        colors->insert(pair<State<T>*,char>(state,'b'));
     }
 }
 
