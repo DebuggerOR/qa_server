@@ -112,15 +112,23 @@ void testFile(string name) {
 }
 
 void testSerialServer(int port){
-    ClientHandler* clientHandler = new MyClientHandler();
+    CacheManager<string, string>* cm = new FileCacheManager<string,string>;
 
-    server_side::Server* server = new MyServers();
+    auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
+
+    ClientHandler* clientHandler = new MyClientHandler(cm, solver);
+
+    server_side::Server* server = new MySerialServer();
 
     server->start(port, clientHandler);
 }
 
 void testParallelServer(int port){
-    ClientHandler* clientHandler = new MyClientHandler();
+    CacheManager<string, string>* cm = new FileCacheManager<string,string>;
+
+    auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
+
+    ClientHandler* clientHandler = new MyClientHandler(cm, solver);
 
     server_side::Server* server = new MyParallelServer();
 
@@ -129,45 +137,49 @@ void testParallelServer(int port){
 
 
 int main(int argc, const char *argv[]) {
+
     //testConsole();
 
     //testFile("graphs2");
 
-    testSerialServer(stoi(argv[1]));
+    //testSerialServer(stoi(argv[1]));
 
-    //testParallelServer(stoi(argv[1]));
+    testParallelServer(stoi(argv[1]));
 
     return 0;
 }
 
-namespace server_side {
-    namespace boot {
 
-        class Main {
 
-        public:
-            int main(int argc, const char *argv[]) {
-                // if get arguments
-                if (argc > 1) {
-                    // server
-                    server_side::Server *server = new MyServers;
 
-                    // cache manager
-                    CacheManagers<string, string> *cacheManager = new FileCacheManager<string, string>;
-
-                    // solver
-                    Solver<string, string> *solver = new Solver<string, string>(new StringReverser);
-
-                    // client handler
-                    ClientHandler *clientHandler = new MyTestClientHandler<string, string>(cacheManager, solver);
-
-                    // start server
-                    server->start(stoi(argv[0]), clientHandler);
-                }
-
-                return 0;
-
-            }
-        };
-    }
-}
+//namespace server_side {
+//    namespace boot {
+//
+//        class Main {
+//
+//        public:
+//            int main(int argc, const char *argv[]) {
+//                // if get arguments
+//                if (argc > 1) {
+//                    // server
+//                    server_side::Server *server = new MySerialServer;
+//
+//                    // cache manager
+//                    CacheManager<string, string> *cacheManager = new FileCacheManager<string, string>;
+//
+//                    // solver
+//                    Solver<string, string> *solver = new Solver<string, string>(new StringReverser);
+//
+//                    // client handler
+//                    ClientHandler *clientHandler = new MyTestClientHandler<string, string>(cacheManager, solver);
+//
+//                    // start server
+//                    server->start(stoi(argv[0]), clientHandler);
+//                }
+//
+//                return 0;
+//
+//            }
+//        };
+//    }
+//}

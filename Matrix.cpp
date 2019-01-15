@@ -19,7 +19,6 @@ Matrix::Matrix(int rows, int cols) {
         vector<State<Point*>*>* row = new vector<State<Point*>*>;
         this->rows->push_back(row);
         for (int j = 0; j < this->numCols; ++j) {
-            //row->push_back(new State<string>(to_string(i)+","+to_string(j)));
             row->push_back(new State<Point*>(new Point(i,j)));
         }
     }

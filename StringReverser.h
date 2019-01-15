@@ -9,13 +9,13 @@
 #include <string>
 #include "Solver.h"
 
-using namespace std;
-
-class StringReverser : public SolverImp<string, string> {
-
-public:
-    string solveImp(string problem);
-};
+//using namespace std;
+//
+//class StringReverser : public SolverImp<string, string> {
+//
+//public:
+//    string solveImp(string problem);
+//};
 
 
 

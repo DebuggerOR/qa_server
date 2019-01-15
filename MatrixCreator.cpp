@@ -56,7 +56,7 @@ Matrix *MatrixCreator::createFromString(string input) {
         for (int c = 0; c < width; ++c) {
             num = "";
             while (input[i] != ',' && input[i] != '$') {
-                if (utils.isDig(input[i])) {
+                if (utils.isDig(input[i])||input[i]=='-') {
                     num += input[i];
                 }
                 ++i;

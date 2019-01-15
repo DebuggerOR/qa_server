@@ -64,16 +64,16 @@ string Utils::pointsToString(vector<Point *> crdnts) {
         c1=c2;
         c2=crdnts[i];
         if(c1->getRow()-1==c2->getRow()){
-            path+="Down,";
+            path="Down,"+path;
         }
         if(c1->getRow()==c2->getRow()-1){
-            path+="Up,";
+            path="Up,"+path;
         }
         if(c1->getCol()-1==c2->getCol()){
-            path+="Right,";
+            path="Right,"+path;
         }
         if(c1->getCol()==c2->getCol()-1){
-            path+="Left,";
+            path="Left,"+path;
         }
     }
     path.erase(path.size()-1);

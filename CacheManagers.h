@@ -7,12 +7,14 @@
 
 #include <map>
 #include <fstream>
+#include <mutex>
+
 #define CACHE_FILE_NAME "data.txt"
 
 using namespace std;
 
 template <class Problem ,class Solution>
-class CacheManagers {
+class CacheManager {
 protected:
     map<Problem, Solution> solutions;
 
@@ -25,25 +27,22 @@ public:
 };
 
 template<class Problem, class Solution>
-bool CacheManagers<Problem, Solution>::isSavedSolution(Problem problem) {
-    cout<<"isSavedSolution"<<endl;
+bool CacheManager<Problem, Solution>::isSavedSolution(Problem problem) {
     return solutions.count(problem) != 0;
 }
 
 template<class Problem, class Solution>
-Solution CacheManagers<Problem, Solution>::getSolution(Problem problem) {
-    cout<<"getSolution"<<endl;
+Solution CacheManager<Problem, Solution>::getSolution(Problem problem) {
     return solutions[problem];
 }
 
 template<class Problem, class Solution>
-void CacheManagers<Problem, Solution>::saveSolution(Problem problem, Solution solution) {
-    cout<<"saveSolution"<<endl;
+void CacheManager<Problem, Solution>::saveSolution(Problem problem, Solution solution) {
     solutions[problem] = solution;
 }
 
 template <class Problem ,class Solution>
-class FileCacheManager: public CacheManagers<Problem,Solution> {
+class FileCacheManager: public CacheManager<Problem,Solution> {
 public:
     FileCacheManager();
 
@@ -56,6 +55,9 @@ public:
 
 template<class Problem, class Solution>
 void FileCacheManager<Problem, Solution>::load() {
+    mutex m;
+    m.lock();
+
     string line;
     ifstream file;
     file.open(CACHE_FILE_NAME, ios::in);
@@ -82,10 +84,15 @@ void FileCacheManager<Problem, Solution>::load() {
         }
         file.close();
     }
+
+    m.unlock();
 }
 
 template<class Problem, class Solution>
 void FileCacheManager<Problem, Solution>::save() {
+    mutex m;
+    m.lock();
+
     ofstream file(CACHE_FILE_NAME);
 
     if (file.is_open()) {
@@ -96,6 +103,8 @@ void FileCacheManager<Problem, Solution>::save() {
     } else {
         throw "unable to open file";
     }
+
+    m.unlock();
 }
 
 template<class Problem, class Solution>

@@ -22,14 +22,44 @@ using namespace server_side;
 bool serialStop;
 bool parallelStop;
 
-void open(ClientHandler *clientHandler, int new_sock) {
+void serial(ClientHandler *clientHandler, int new_sock) {
     cout << "start server" << endl;
     string nextBuffer, connectedBuffer;
     char buffer[4096];
 
     try {
-        while(true) {
-            cout << buffer;
+        while(!serialStop) {
+            bzero(buffer, 256);
+            read(new_sock, buffer, 255);
+            connectedBuffer += buffer;
+            if (connectedBuffer[connectedBuffer.size() - 1] != '$') {
+                connectedBuffer += "$";
+            }
+            if (!strcmp(buffer, "end")) {
+                string answer;
+                if(connectedBuffer[0]=='$'){
+                    connectedBuffer[0]=' ';
+                }
+                clientHandler->handleClient(connectedBuffer, answer);
+                const char *cstr = answer.c_str();
+                write(new_sock, cstr, answer.size());
+                break;
+            }
+        }
+    } catch (...) {
+        cout << "connection stopped" << endl;
+    }
+    close(new_sock);
+    cout << "end server" << endl;
+}
+
+void parallel(ClientHandler *clientHandler, int new_sock) {
+    cout << "start server" << endl;
+    string nextBuffer, connectedBuffer;
+    char buffer[4096];
+
+    try {
+        while(!parallelStop) {
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
             connectedBuffer += buffer;
@@ -93,7 +123,7 @@ void openSerial(ClientHandler *clientHandler, int port) {
             }
 
             if(new_sock>=0) {
-                thread* t = new thread(open, clientHandler, new_sock);
+                thread* t = new thread(serial, clientHandler, new_sock);
                 t->join();
                 isFirst = false;
             }
@@ -145,7 +175,7 @@ void openParallel(ClientHandler *clientHandler, int port) {
             }
 
             if(new_sock>=0) {
-                threads.push(new thread(open, clientHandler, new_sock));
+                threads.push(new thread(parallel, clientHandler, new_sock));
                 isFirst = false;
             }
         } catch (...) {
@@ -158,10 +188,10 @@ void openParallel(ClientHandler *clientHandler, int port) {
     }
 }
 
-class MyServers : public Server {
+class MySerialServer : public Server {
 
 public:
-    MyServers()= default;
+    MySerialServer()= default;
 
     void stop() override;
 
@@ -169,11 +199,11 @@ public:
 };
 
 
-void MyServers::stop() {
+void MySerialServer::stop() {
     serialStop = true;
 }
 
-void MyServers::start(int port, ClientHandler *clientHandler) {
+void MySerialServer::start(int port, ClientHandler *clientHandler) {
     serialStop = false;
     thread* t = new thread(openSerial, clientHandler, port);
     t->join();

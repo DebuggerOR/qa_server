@@ -14,15 +14,14 @@
 
 
 void MyClientHandler::handleClient(string question, string &answer) {
-    auto * cacheManager = new FileCacheManager<string, string>;
-    if (cacheManager->isSavedSolution(question)) {
-        answer = cacheManager->getSolution(question);
+    if (this->cm->isSavedSolution(question)) {
+        answer = this->cm->getSolution(question);
 
     } else {
         MatrixCreator matrixCreator;
         Matrix *matrix = matrixCreator.createFromString(question);
 
-        Searcher < Point * > *aStar = new AStar<Point *>;
+        Searcher<Point *> *aStar = new AStar<Point *>;
         auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
         solver->setSolverImp(aStar);
 
@@ -35,8 +34,13 @@ void MyClientHandler::handleClient(string question, string &answer) {
 
         Utils utils;
         answer = utils.pointsToString(vec);
-        cacheManager->saveSolution(question, answer);
+        this->cm->saveSolution(question, answer);
     }
-
-    delete cacheManager;
 }
+
+MyClientHandler::MyClientHandler(CacheManager<string, string> *cm,
+                                 Solver<list<State<Point *> *> *, Searchable<Point *> *> *solver) {
+    this->cm=cm;
+    this->solver=solver;
+}
+
