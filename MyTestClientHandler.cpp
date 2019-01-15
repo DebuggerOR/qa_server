@@ -5,7 +5,7 @@
 #include "MyTestClientHandler.h"
 
 template<class Solution, class Problem>
-MyTestClientHandler<Solution, Problem>::MyTestClientHandler(CacheManager<Problem, Solution> *cm,
+MyTestClientHandler<Solution, Problem>::MyTestClientHandler(CacheManagers<Problem, Solution> *cm,
                                                             Solver<Problem, Solution> *solver) {
     this->solver=solver;
     this->cm=cm;

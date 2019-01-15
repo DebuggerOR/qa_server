@@ -7,8 +7,7 @@
 #include "Server.h"
 #include "Solver.h"
 #include "StringReverser.h"
-#include "CacheManager.h"
-#include "FileCacheManager.h"
+#include "CacheManagers.h"
 #include "MyTestClientHandler.h"
 #include <thread>
 #include <netinet/in.h>
@@ -23,8 +22,8 @@ using namespace server_side;
 bool serialStop;
 bool parallelStop;
 
-void open(ClientHandler *clientHandler, int port, int new_sock, int s) {
-    cout << "start server" << new_sock << endl;
+void open(ClientHandler *clientHandler, int new_sock) {
+    cout << "start server" << endl;
     string nextBuffer, connectedBuffer;
     char buffer[4096];
 
@@ -39,6 +38,9 @@ void open(ClientHandler *clientHandler, int port, int new_sock, int s) {
             }
             if (!strcmp(buffer, "end")) {
                 string answer;
+                if(connectedBuffer[0]=='$'){
+                    connectedBuffer[0]=' ';
+                }
                 clientHandler->handleClient(connectedBuffer, answer);
                 const char *cstr = answer.c_str();
                 write(new_sock, cstr, answer.size());
@@ -49,7 +51,7 @@ void open(ClientHandler *clientHandler, int port, int new_sock, int s) {
         cout << "connection stopped" << endl;
     }
     close(new_sock);
-    cout << "end server" << new_sock << endl;
+    cout << "end server" << endl;
 }
 
 void openSerial(ClientHandler *clientHandler, int port) {
@@ -61,7 +63,7 @@ void openSerial(ClientHandler *clientHandler, int port) {
     bool isFirst=true;
 
     timeval timeout;
-    timeout.tv_sec = 10;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 
     bind(s, (sockaddr *) &serv, sizeof(serv));
@@ -91,7 +93,7 @@ void openSerial(ClientHandler *clientHandler, int port) {
             }
 
             if(new_sock>=0) {
-                thread* t = new thread(open, clientHandler, port, new_sock, s);
+                thread* t = new thread(open, clientHandler, new_sock);
                 t->join();
                 isFirst = false;
             }
@@ -119,7 +121,7 @@ void openParallel(ClientHandler *clientHandler, int port) {
     socklen_t clilen = sizeof(client);
 
     timeval timeout;
-    timeout.tv_sec = 10;
+    timeout.tv_sec = 1;
     timeout.tv_usec = 0;
 
     while (!parallelStop) {
@@ -143,7 +145,7 @@ void openParallel(ClientHandler *clientHandler, int port) {
             }
 
             if(new_sock>=0) {
-                threads.push(new thread(open, clientHandler, port, new_sock, s));
+                threads.push(new thread(open, clientHandler, new_sock));
                 isFirst = false;
             }
         } catch (...) {

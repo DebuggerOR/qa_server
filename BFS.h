@@ -6,12 +6,11 @@
 
 
 #include <string>
-#include "Searcher.h"
-#include "list"
-#include "map"
-
+#include <list>
+#include <map>
 #include <iostream>
 #include <queue>
+
 #include "Searcher.h"
 
 using std::queue;
@@ -28,8 +27,6 @@ public:
 
 template<class T>
 list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
-    this->evaluatedNodes=0;
-
     // if initial case is goal state
     if(searchable->getInitialState() == searchable->getGoalState()){
         return this->backTrace(searchable->getInitialState(), searchable);
@@ -42,11 +39,10 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
 
     while (!myQueue.empty()) {
         State<T>* state = myQueue.front();
-        this->evaluatedNodes++;
+        ++this->evaluatedNodes;
 
         // if state is goal state
         if(searchable->getGoalState() == state){
-            cout<<"bfs back trace"<<endl;
             return this->backTrace(state, searchable);
         }
 

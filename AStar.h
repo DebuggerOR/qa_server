@@ -9,11 +9,11 @@
 
 template <class T>
 class AStar : public Searcher<T> {
-    list<State<T>*>* search(Searchable<T>* searchable);
+    list<State<T> *> *search(Searchable<T> *searchable);
 
 private:
 
-    double fromHere(State<T> *state, State<T>* goal);
+    double fromHere(State<T> *state, State<T> *goal);
 };
 
 
@@ -46,11 +46,10 @@ list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
             }
         }
         openList.remove(best);
+        ++this->evaluatedNodes;
 
         list<State<T>*>* adj = searchable->getAllPossibleStates(best);
         for(auto &a : *adj) {
-            ++this->evaluatedNodes;
-
             if (a == goal) {
                 a->setCameFrom(best);
                 return this->backTrace(a, searchable);

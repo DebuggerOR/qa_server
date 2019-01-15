@@ -34,10 +34,10 @@ list<State<T>*>* DFS<T>::search(Searchable<T>* searchable) {
 template<class T>
 list<State<T> *> *
 DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, Searchable<T> *searchable) {
+    ++this->evaluatedNodes;
 
     // if state is goal state
     if(searchable->getGoalState() == state){
-        cout<<"dfs back trace"<<endl;
         return this->backTrace(state, searchable);
     }
 
@@ -53,7 +53,6 @@ DFS<T>::visit(State<T> *state, list<State<T> *> blacks, list<State<T> *> grays, 
         }
 
         if(isWhite) {
-            this->evaluatedNodes++;
             a->setCameFrom(state);
             return this->visit(a, blacks, grays, searchable);
         }

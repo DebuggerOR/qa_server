@@ -39,17 +39,13 @@ Matrix *MatrixCreator::createFromString(string input) {
 
     // determine width
     int j = 0;
-    bool finished = false;
-    while (input[j] != '$' && !finished) {
-        ++width;
-        while (input[j] != ',' && !finished) {
-            if (input[j] == '$') {
-                finished = true;
-            }
-            ++j;
+    while (input[j] != '$') {
+        if(input[j] == ','){
+            ++width;
         }
         ++j;
     }
+    ++width;
 
     Matrix *matrix = new Matrix(height, width);
 

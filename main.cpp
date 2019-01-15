@@ -52,21 +52,63 @@ void testConsole(){
     cout<<utils.pointsToString(vec3)<<endl;
 }
 
-void testFile(string name){
-    auto * matrixCreator = new MatrixCreator;
-    Matrix* matrix = matrixCreator->createFromFile(name);
-    matrix->displayMat();
-
-    auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
-
+void testFile(string name) {
     Utils utils;
-    solver->setSolverImp(new AStar<Point*>);
-    list<State<Point*>*>* lst2 = solver->solve(matrix);
-    vector<Point*> vec2;
-    for (auto &l:(*lst2)) {
-        vec2.push_back(l->getState());
+    auto *matrixCreator = new MatrixCreator;
+    Matrix *matrix = matrixCreator->createFromFile(name);
+    matrix->displayMat();
+    list<State<Point *> *> *lst;
+    vector<Point *> vec;
+    auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
+
+
+    cout << "\ntest dfs\n" << endl;
+
+    auto *dfs = new DFS<Point *>;
+    solver->setSolverImp(dfs);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
     }
-    cout<<utils.pointsToString(vec2)<<endl;
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << dfs->getNumberOfNodesEvaluated() << endl;
+    vec.clear();
+
+    cout << "\ntest bfs\n" << endl;
+
+    auto *bfs = new BFS<Point *>;
+    solver->setSolverImp(bfs);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << bfs->getNumberOfNodesEvaluated() << endl;
+    vec.clear();
+
+    cout << "\ntest best\n" << endl;
+
+    auto *best = new BestFirstSearch<Point *>;
+    solver->setSolverImp(best);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << best->getNumberOfNodesEvaluated() << endl;
+    vec.clear();
+
+    cout << "\ntest a star\n" << endl;
+
+    auto *a = new AStar<Point *>;
+    solver->setSolverImp(a);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << a->getNumberOfNodesEvaluated() << endl;
+    vec.clear();
 }
 
 void testSerialServer(int port){
@@ -89,9 +131,9 @@ void testParallelServer(int port){
 int main(int argc, const char *argv[]) {
     //testConsole();
 
-    testFile("graphs2");
+    //testFile("graphs2");
 
-    //testSerialServer(stoi(argv[1]));
+    testSerialServer(stoi(argv[1]));
 
     //testParallelServer(stoi(argv[1]));
 
@@ -111,7 +153,7 @@ namespace server_side {
                     server_side::Server *server = new MyServers;
 
                     // cache manager
-                    CacheManager<string, string> *cacheManager = new FileCacheManager<string, string>;
+                    CacheManagers<string, string> *cacheManager = new FileCacheManager<string, string>;
 
                     // solver
                     Solver<string, string> *solver = new Solver<string, string>(new StringReverser);

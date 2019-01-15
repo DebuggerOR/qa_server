@@ -53,29 +53,37 @@ list<State<Point*>*>* Matrix::getAllPossibleStates(State<Point*> *state) {
     bool isFinished = false;
     for (int i = 0; i < this->numRows && !isFinished; ++i) {
         for (int j = 0; j < this->numCols && !isFinished; ++j) {
-            if(this->rows->at(i)->at(j)==state){
-                isFinished= true;
-                row=i;
-                col=j;
+            if (this->rows->at(i)->at(j) == state) {
+                isFinished = true;
+                row = i;
+                col = j;
             }
         }
     }
 
-    auto * pos = new list<State<Point*>*>;
-    if(row > 0){
-        pos->push_back(this->rows->at(row-1)->at(col));
+    auto *pos = new list<State<Point *> *>;
+    if (row > 0) {
+        if(this->rows->at(row - 1)->at(col)->getCost()!=-1) {
+            pos->push_back(this->rows->at(row - 1)->at(col));
+        }
     }
 
-    if (col>0){
-        pos->push_back(this->rows->at(row)->at(col-1));
+    if (col > 0) {
+        if(this->rows->at(row)->at(col - 1)->getCost()!=-1) {
+            pos->push_back(this->rows->at(row)->at(col - 1));
+        }
     }
 
-    if(row < this->numRows - 1){
-        pos->push_back(this->rows->at(row+1)->at(col));
+    if (row < this->numRows - 1) {
+        if(this->rows->at(row + 1)->at(col)->getCost()!=-1) {
+            pos->push_back(this->rows->at(row + 1)->at(col));
+        }
     }
 
-    if(col < this->numCols -1) {
-        pos->push_back(this->rows->at(row)->at(col+1));
+    if (col < this->numCols - 1) {
+        if(this->rows->at(row)->at(col + 1)->getCost()!=-1) {
+            pos->push_back(this->rows->at(row)->at(col + 1));
+        }
     }
 
     return pos;

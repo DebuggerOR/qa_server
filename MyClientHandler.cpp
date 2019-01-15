@@ -10,25 +10,33 @@
 #include "DFS.h"
 #include "BestFirstSearch.h"
 #include "AStar.h"
+#include "CacheManagers.h"
 
 
-void MyClientHandler::handleClient(string &question, string &answer) {
-    cout<<question<<endl;
+void MyClientHandler::handleClient(string question, string &answer) {
+    auto * cacheManager = new FileCacheManager<string, string>;
+    if (cacheManager->isSavedSolution(question)) {
+        answer = cacheManager->getSolution(question);
 
-    MatrixCreator matrixCreator;
-    Matrix* matrix = matrixCreator.createFromString(question);
+    } else {
+        MatrixCreator matrixCreator;
+        Matrix *matrix = matrixCreator.createFromString(question);
 
-    Searcher<Point*>* bfs = new BFS<Point*>;
-    auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
-    solver->setSolverImp(bfs);
+        Searcher < Point * > *aStar = new AStar<Point *>;
+        auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
+        solver->setSolverImp(aStar);
 
-    list<State<Point*>*>* traceBFS=solver->solve(matrix);
+        list<State<Point *> *> *traceAStar = solver->solve(matrix);
 
-    vector<Point*> vec;
-    for (auto &l:(*traceBFS)) {
-        vec.push_back(l->getState());
+        vector<Point *> vec;
+        for (auto &l:(*traceAStar)) {
+            vec.push_back(l->getState());
+        }
+
+        Utils utils;
+        answer = utils.pointsToString(vec);
+        cacheManager->saveSolution(question, answer);
     }
 
-    Utils utils;
-    answer = utils.pointsToString(vec);
+    delete cacheManager;
 }

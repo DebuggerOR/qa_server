@@ -30,7 +30,7 @@ protected:
 
 template <class T>
 int Searcher<T>::getNumberOfNodesEvaluated() {
-    return this->evlaluatedNodes;
+    return this->evaluatedNodes;
 }
 
 template <class T>
