@@ -39,6 +39,7 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
     while (!myQueue.empty()) {
         State<T>* state = myQueue.front();
         myQueue.pop();
+        ++this->evaluatedNodes;
 
         // if state is goal state
         if(searchable->getGoalState() == state){
@@ -55,7 +56,6 @@ list<State<T>*>* BFS<T>::search(Searchable<T>* searchable) {
             }
         }
 
-        ++this->evaluatedNodes;
         colors->insert(pair<State<T>*,char>(state,'b'));
     }
 }

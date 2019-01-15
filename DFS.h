@@ -33,6 +33,7 @@ list<State<T>*>* DFS<T>::search(Searchable<T>* searchable) {
     while (!myStack.empty()) {
         State<T>* state = myStack.top();
         myStack.pop();
+        ++this->evaluatedNodes;
 
         // if state is goal state
         if(searchable->getGoalState() == state){
@@ -49,7 +50,6 @@ list<State<T>*>* DFS<T>::search(Searchable<T>* searchable) {
             }
         }
 
-        ++this->evaluatedNodes;
         colors->insert(pair<State<T>*,char>(state,'b'));
     }
 }
