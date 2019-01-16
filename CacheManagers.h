@@ -13,7 +13,7 @@
 
 using namespace std;
 
-template <class Problem ,class Solution>
+template<class Problem, class Solution>
 class CacheManager {
 protected:
     map<Problem, Solution> solutions;
@@ -41,8 +41,8 @@ void CacheManager<Problem, Solution>::saveSolution(Problem problem, Solution sol
     solutions[problem] = solution;
 }
 
-template <class Problem ,class Solution>
-class FileCacheManager: public CacheManager<Problem,Solution> {
+template<class Problem, class Solution>
+class FileCacheManager : public CacheManager<Problem, Solution> {
 public:
     FileCacheManager();
 

@@ -11,56 +11,15 @@
 #include "MyClientHandler.h"
 #include "AStar.h"
 
-void testConsole(){
-    auto * matrixCreator = new MatrixCreator;
-    Matrix* matrix = matrixCreator->createFromConsole();
-    matrix->displayMat();
-
-    auto * solver = new Solver<list<State<Point*>*>*, Searchable<Point*>*>;
-
-    solver->setSolverImp(new BFS<Point*>);
-    list<State<Point*>*>* lst = solver->solve(matrix);
-    vector<Point*> vec;
-    for (auto &l:(*lst)) {
-        vec.push_back(l->getState());
-    }
+void testConsole() {
     Utils utils;
-    cout<<utils.pointsToString(vec)<<endl;
+    MatrixCreator matrixCreator;
+    Matrix *matrix = matrixCreator.createFromConsole();
 
-    solver->setSolverImp(new DFS<Point*>);
-    list<State<Point*>*>* lst1 = solver->solve(matrix);
-    vector<Point*> vec1;
-    for (auto &l:(*lst1)) {
-        vec1.push_back(l->getState());
-    }
-    cout<<utils.pointsToString(vec1)<<endl;
-
-    solver->setSolverImp(new BestFirstSearch<Point*>);
-    list<State<Point*>*>* lst2 = solver->solve(matrix);
-    vector<Point*> vec2;
-    for (auto &l:(*lst2)) {
-        vec2.push_back(l->getState());
-    }
-    cout<<utils.pointsToString(vec2)<<endl;
-
-    solver->setSolverImp(new AStar<Point*>);
-    list<State<Point*>*>* lst3 = solver->solve(matrix);
-    vector<Point*> vec3;
-    for (auto &l:(*lst3)) {
-        vec2.push_back(l->getState());
-    }
-    cout<<utils.pointsToString(vec3)<<endl;
-}
-
-void testFile(string name) {
-    Utils utils;
-    auto *matrixCreator = new MatrixCreator;
-    Matrix *matrix = matrixCreator->createFromFile(name);
     matrix->displayMat();
     list<State<Point *> *> *lst;
     vector<Point *> vec;
     auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
-
 
     cout << "\ntest dfs\n" << endl;
 
@@ -74,6 +33,7 @@ void testFile(string name) {
     cout << "visited:\t" << dfs->getNumberOfNodesEvaluated() << endl;
     cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
+    delete lst;
 
     cout << "\ntest bfs\n" << endl;
 
@@ -87,6 +47,7 @@ void testFile(string name) {
     cout << "visited:\t" << bfs->getNumberOfNodesEvaluated() << endl;
     cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
+    delete lst;
 
     cout << "\ntest best\n" << endl;
 
@@ -100,6 +61,7 @@ void testFile(string name) {
     cout << "visited:\t" << best->getNumberOfNodesEvaluated() << endl;
     cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
+    delete lst;
 
     cout << "\ntest a star\n" << endl;
 
@@ -113,30 +75,122 @@ void testFile(string name) {
     cout << "visited:\t" << a->getNumberOfNodesEvaluated() << endl;
     cout << "weight:\t" << utils.pathWeight(lst) << endl;
     vec.clear();
+    delete lst;
+
+    delete dfs;
+    delete bfs;
+    delete best;
+    delete a;
+    delete solver;
+    delete matrix;
 }
 
-void testSerialServer(int port){
-    CacheManager<string, string>* cm = new FileCacheManager<string,string>;
+void testFile(string name) {
+    Utils utils;
+    MatrixCreator matrixCreator;
+    Matrix *matrix = matrixCreator.createFromFile(name);
+
+    matrix->displayMat();
+    list<State<Point *> *> *lst;
+    vector<Point *> vec;
+    auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
+
+    cout << "\ntest dfs\n" << endl;
+
+    auto *dfs = new DFS<Point *>;
+    solver->setSolverImp(dfs);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << dfs->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    vec.clear();
+    delete lst;
+
+    cout << "\ntest bfs\n" << endl;
+
+    auto *bfs = new BFS<Point *>;
+    solver->setSolverImp(bfs);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << bfs->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    vec.clear();
+    delete lst;
+
+    cout << "\ntest best\n" << endl;
+
+    auto *best = new BestFirstSearch<Point *>;
+    solver->setSolverImp(best);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << best->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    vec.clear();
+    delete lst;
+
+    cout << "\ntest a star\n" << endl;
+
+    auto *a = new AStar<Point *>;
+    solver->setSolverImp(a);
+    lst = solver->solve(matrix);
+    for (auto &l:(*lst)) {
+        vec.push_back(l->getState());
+    }
+    cout << utils.pointsToString(vec) << endl;
+    cout << "visited:\t" << a->getNumberOfNodesEvaluated() << endl;
+    cout << "weight:\t" << utils.pathWeight(lst) << endl;
+    vec.clear();
+    delete lst;
+
+    delete dfs;
+    delete bfs;
+    delete best;
+    delete a;
+    delete solver;
+    delete matrix;
+}
+
+void testSerialServer(int port) {
+    auto *cm = new FileCacheManager<string, string>;
 
     auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
 
-    ClientHandler* clientHandler = new MyClientHandler(cm, solver);
+    ClientHandler *clientHandler = new MyClientHandler(cm, solver);
 
-    server_side::Server* server = new MySerialServer();
+    server_side::Server *server = new MySerialServer();
 
     server->start(port, clientHandler);
+
+    delete cm;
+    delete solver;
+    delete clientHandler;
+    delete server;
 }
 
-void testParallelServer(int port){
-    CacheManager<string, string>* cm = new FileCacheManager<string,string>;
+void testParallelServer(int port) {
+    auto *cm = new FileCacheManager<string, string>;
 
     auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
 
-    ClientHandler* clientHandler = new MyClientHandler(cm, solver);
+    ClientHandler *clientHandler = new MyClientHandler(cm, solver);
 
-    server_side::Server* server = new MyParallelServer();
+    server_side::Server *server = new MyParallelServer();
 
     server->start(port, clientHandler);
+
+    delete cm;
+    delete solver;
+    delete clientHandler;
+    delete server;
 }
 
 
@@ -144,11 +198,11 @@ int main(int argc, const char *argv[]) {
 
     //testConsole();
 
-    testFile("test1");
+    //testFile("test1");
 
     //testSerialServer(stoi(argv[1]));
 
-    //testParallelServer(stoi(argv[1]));
+    testParallelServer(stoi(argv[1]));
 
     return 0;
 }

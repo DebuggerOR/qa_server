@@ -13,33 +13,36 @@
 #include "SolverImp.h"
 
 
-template <class T>
-class Searcher : public SolverImp<list<State<T>*>*, Searchable<T>*> {
+template<class T>
+class Searcher : public SolverImp<list<State<T> *> *, Searchable<T> *> {
 protected:
     int evaluatedNodes;
 
 public:
     Searcher();
-    virtual list<State<T>*>* search(Searchable<T>* searchable);
+
+    virtual list<State<T> *> *search(Searchable<T> *searchable);
+
     int getNumberOfNodesEvaluated();
-    list<State<T>*>* solveImp(Searchable<T>* searchable) override;
+
+    list<State<T> *> *solveImp(Searchable<T> *searchable) override;
 
 protected:
     list<State<T> *> *backTrace(State<T> *state, Searchable<T> *searchable);
 };
 
-template <class T>
+template<class T>
 int Searcher<T>::getNumberOfNodesEvaluated() {
     return this->evaluatedNodes;
 }
 
-template <class T>
+template<class T>
 Searcher<T>::Searcher() {
-    this->evaluatedNodes=0;
+    this->evaluatedNodes = 0;
 }
 
 template<class T>
-list<State<T>*>* Searcher<T>::solveImp(Searchable<T>* searchable) {
+list<State<T> *> *Searcher<T>::solveImp(Searchable<T> *searchable) {
     return this->search(searchable);
 }
 
@@ -50,11 +53,11 @@ list<State<T> *> *Searcher<T>::search(Searchable<T> *searchable) {
 
 template<class T>
 list<State<T> *> *Searcher<T>::backTrace(State<T> *state, Searchable<T> *searchable) {
-    auto * trace = new list<State<T>*>;
+    auto *trace = new list<State<T> *>;
 
-    while (state != searchable->getInitialState()){
-        if(state == nullptr){
-            cout<<"no path"<<endl;
+    while (state != searchable->getInitialState()) {
+        if (state == nullptr) {
+            cout << "no path" << endl;
             return nullptr;
         }
         trace->push_back(state);

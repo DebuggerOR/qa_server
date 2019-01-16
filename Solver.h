@@ -1,6 +1,3 @@
-//
-// Created by ori on 1/6/19.
-//
 
 #ifndef PROJ2222_SOLVER_H
 #define PROJ2222_SOLVER_H
@@ -8,23 +5,23 @@
 
 #include "SolverImp.h"
 
-template <class Solution ,class Problem>
+template<class Solution, class Problem>
 class Solver {
-    SolverImp<Solution, Problem>* solverImp;
+    SolverImp<Solution, Problem> *solverImp;
 
 public:
     Solver();
 
-    Solver(SolverImp<Solution, Problem>* solverImp);
+    Solver(SolverImp<Solution, Problem> *solverImp);
 
     virtual Solution solve(Problem);
 
-    void setSolverImp(SolverImp<Solution,Problem>* solverImp);
+    void setSolverImp(SolverImp<Solution, Problem> *solverImp);
 };
 
 template<class Solution, class Problem>
-Solver<Solution, Problem>::Solver(SolverImp<Solution, Problem>* solverImp) {
-    this->solverImp=solverImp;
+Solver<Solution, Problem>::Solver(SolverImp<Solution, Problem> *solverImp) {
+    this->solverImp = solverImp;
 }
 
 template<class Solution, class Problem>
@@ -34,7 +31,7 @@ Solution Solver<Solution, Problem>::solve(Problem problem) {
 
 template<class Solution, class Problem>
 void Solver<Solution, Problem>::setSolverImp(SolverImp<Solution, Problem> *solverImp) {
-this->solverImp=solverImp;
+    this->solverImp = solverImp;
 }
 
 template<class Solution, class Problem>

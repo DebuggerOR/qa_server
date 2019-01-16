@@ -6,8 +6,10 @@
 
 
 #include "Searcher.h"
+#include "Utils.h"
+#include <map>
 
-template <class T>
+template<class T>
 class AStar : public Searcher<T> {
     list<State<T> *> *search(Searchable<T> *searchable);
 
@@ -18,42 +20,43 @@ private:
 
 
 template<class T>
-double AStar<T>::fromHere(State<T> *state, State<T>* goal) {
+double AStar<T>::fromHere(State<T> *state, State<T> *goal) {
     Utils utils;
     return utils.walkDistance(state->getState(), goal->getState());
 }
 
 template<class T>
-list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
-    this->evaluatedNodes=0;
+list<State<T> *> *AStar<T>::search(Searchable<T> *searchable) {
+    this->evaluatedNodes = 0;
 
     // list of nodes that need to be checked
-    list<State<T>*> openList;
+    list<State<T> *> openList;
     //list of nodes that have been checked
-    list<State<T>*> closedList;
-    map<State<T>*, double> toState;
+    list<State<T> *> closedList;
+    map<State<T> *, double> toState;
 
-    State<T>* init = searchable->getInitialState();
-    State<T>* goal = searchable->getGoalState();
+    State<T> *init = searchable->getInitialState();
+    State<T> *goal = searchable->getGoalState();
 
     openList.push_back(init);
-    toState[init]=0;
+    toState[init] = 0;
 
-    while(!openList.empty()){
-        State<T>* best= openList.front();
-        for(auto &o : openList){
-            if(this->fromHere(o,goal)+toState.at(o)<this->fromHere(best,goal)+toState.at(best)){
-                best=o;
+    while (!openList.empty()) {
+        State<T> *best = openList.front();
+        for (auto &o : openList) {
+            if (this->fromHere(o, goal) + toState.at(o) < this->fromHere(best, goal) + toState.at(best)) {
+                best = o;
             }
         }
         openList.remove(best);
         ++this->evaluatedNodes;
 
-        list<State<T>*>* adj = searchable->getAllPossibleStates(best);
-        for(auto &a : *adj) {
+        list<State<T> *> *adj = searchable->getAllPossibleStates(best);
+        for (auto &a : *adj) {
             if (a == goal) {
                 a->setCameFrom(best);
-                return this->backTrace(a, searchable);
+                delete adj;
+                return this->backTrace(goal, searchable);
             }
 
             // if in the closed list ignore
@@ -79,22 +82,22 @@ list<State<T>*>* AStar<T>::search(Searchable<T>* searchable) {
                 }
             }
             if (isInOpen) {
-                if (this->fromHere(best,goal) + toState[best] + a->getCost() < this->fromHere(a,goal) + toState[a]) {
+                if (this->fromHere(best, goal) + toState[best] + a->getCost() < this->fromHere(a, goal) + toState[a]) {
                     a->setCameFrom(best);
-                    toState[a]=toState[best]+a->getCost();
+                    toState[a] = toState[best] + a->getCost();
                     best = a;
                 }
                 // if not in the open list add it and compute its score
             } else {
                 a->setCameFrom(best);
-                toState[a]=toState[best]+a->getCost();
+                toState[a] = toState[best] + a->getCost();
                 openList.push_back(a);
             }
         }
+        delete adj;
         closedList.push_back(best);
     }
 }
 
 
-
-#endif //PROJ2222_ASTAR_H
+#endif

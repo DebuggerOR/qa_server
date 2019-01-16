@@ -1,13 +1,11 @@
-//
-// Created by ori on 1/10/19.
-//
+
 
 #include <iostream>
 #include <fstream>
 #include "MatrixCreator.h"
 #include "Utils.h"
 
-Matrix* MatrixCreator::createFromConsole() {
+Matrix *MatrixCreator::createFromConsole() {
     string input;
     string line;
 
@@ -30,8 +28,8 @@ Matrix *MatrixCreator::createFromString(string input) {
     int width = 0;
 
     // determine height
-    for(int i=1; i<input.size();++i){
-        if(input[i]=='$'){
+    for (int i = 1; i < input.size(); ++i) {
+        if (input[i] == '$') {
             ++height;
         }
     }
@@ -40,7 +38,7 @@ Matrix *MatrixCreator::createFromString(string input) {
     // determine width
     int j = 0;
     while (input[j] != '$') {
-        if(input[j] == ','){
+        if (input[j] == ',') {
             ++width;
         }
         ++j;
@@ -51,24 +49,24 @@ Matrix *MatrixCreator::createFromString(string input) {
 
     int i = 0;
     string num;
-    vector<int> *nums = new vector<int>;
+    vector<int> nums;
     for (int r = 0; r < height; ++r) {
         for (int c = 0; c < width; ++c) {
             num = "";
             while (input[i] != ',' && input[i] != '$') {
-                if (utils.isDig(input[i])||input[i]=='-') {
+                if (utils.isDig(input[i]) || input[i] == '-') {
                     num += input[i];
                 }
                 ++i;
             }
-            nums->push_back(stoi(num));
+            nums.push_back(stoi(num));
             ++i;
         }
     }
-    matrix->fill(nums);
+    matrix->fill(&nums);
 
     string rEntrance, cEntrance;
-    while(input[i]!= ',') {
+    while (input[i] != ',') {
         if (utils.isDig(input[i])) {
             rEntrance += input[i];
         }
@@ -82,9 +80,9 @@ Matrix *MatrixCreator::createFromString(string input) {
         ++i;
     }
     ++i;
-    
+
     string rExit, cExit;
-    while(input[i]!= ',') {
+    while (input[i] != ',') {
         if (utils.isDig(input[i])) {
             rExit += input[i];
         }
@@ -97,7 +95,7 @@ Matrix *MatrixCreator::createFromString(string input) {
         }
         ++i;
     }
-    
+
     matrix->setInitialState(stoi(rEntrance), stoi(cEntrance));
     matrix->setGoalState(stoi(rExit), stoi(cExit));
 
@@ -107,7 +105,7 @@ Matrix *MatrixCreator::createFromString(string input) {
 Matrix *MatrixCreator::createFromFile(string fileName) {
     string line;
     string input;
-    ifstream file (fileName);
+    ifstream file(fileName);
 
     if (file.is_open()) {
         getline(file, line);

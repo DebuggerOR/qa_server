@@ -11,13 +11,15 @@
 
 using namespace std;
 
-template <class T>
+template<class T>
 class Searchable {
 
 public:
-    virtual State<T>* getInitialState();
-    virtual State<T>* getGoalState();
-    virtual list<State<T>*>* getAllPossibleStates(State<T>* s);
+    virtual State<T> *getInitialState();
+
+    virtual State<T> *getGoalState();
+
+    virtual list<State<T> *> *getAllPossibleStates(State<T> *s);
 };
 
 template<class T>

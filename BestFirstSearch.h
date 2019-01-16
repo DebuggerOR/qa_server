@@ -9,38 +9,39 @@
 #include <algorithm>
 #include <iostream>
 #include <cstdlib>
+#include <map>
 #include "Searcher.h"
 
 using namespace std;
 
-template <class T>
-class BestFirstSearch  : public Searcher<T> {
+template<class T>
+class BestFirstSearch : public Searcher<T> {
 public:
-    list<State<T>*>* search(Searchable<T>* searchable);
+    list<State<T> *> *search(Searchable<T> *searchable);
 };
 
 
 template<class T>
 list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
-    this->evaluatedNodes=0;
+    this->evaluatedNodes = 0;
 
     // list of nodes that need to be checked
-    list<State<T>*> openList;
+    list<State<T> *> openList;
     //list of nodes that have been checked
-    list<State<T>*> closedList;
-    map<State<T>*, double> toState;
+    list<State<T> *> closedList;
+    map<State<T> *, double> toState;
 
-    State<T>* init = searchable->getInitialState();
-    State<T>* goal = searchable->getGoalState();
+    State<T> *init = searchable->getInitialState();
+    State<T> *goal = searchable->getGoalState();
 
     openList.push_back(init);
-    toState[init]=0;
+    toState[init] = 0;
 
-    while(!openList.empty()){
-        State<T>* best= openList.front();
-        for(auto &o : openList){
-            if(toState.at(o)<toState.at(best)){
-                best=o;
+    while (!openList.empty()) {
+        State<T> *best = openList.front();
+        for (auto &o : openList) {
+            if (toState.at(o) < toState.at(best)) {
+                best = o;
             }
         }
         openList.remove(best);
@@ -48,11 +49,12 @@ list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
         ++this->evaluatedNodes;
 
 
-        list<State<T>*>* adj = searchable->getAllPossibleStates(best);
-        for(auto &a : *adj) {
+        list<State<T> *> *adj = searchable->getAllPossibleStates(best);
+        for (auto &a : *adj) {
             if (a == goal) {
                 a->setCameFrom(best);
-                return this->backTrace(a, searchable);
+                delete adj;
+                return this->backTrace(goal, searchable);
             }
 
             // if in the closed list ignore
@@ -80,21 +82,20 @@ list<State<T> *> *BestFirstSearch<T>::search(Searchable<T> *searchable) {
             if (isInOpen) {
                 if (toState[best] + a->getCost() < toState[a]) {
                     a->setCameFrom(best);
-                    toState[a]=toState[best]+a->getCost();
+                    toState[a] = toState[best] + a->getCost();
                     best = a;
                 }
                 // if not in the open list add it and compute its score
             } else {
                 a->setCameFrom(best);
-                toState[a]=toState[best]+a->getCost();
+                toState[a] = toState[best] + a->getCost();
                 openList.push_back(a);
             }
         }
+        delete adj;
         closedList.push_back(best);
     }
 }
-
-
 
 
 #endif

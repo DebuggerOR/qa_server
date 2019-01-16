@@ -11,7 +11,6 @@
 #include "State.h"
 
 
-
 using namespace std;
 
 class Utils {
@@ -22,17 +21,17 @@ public:
 
     string coordinatesToString(vector<string> crdnts);
 
-    string pointsToString(vector<Point*> crdnts);
+    string pointsToString(vector<Point *> crdnts);
 
-    Point* stringToPoint(string crdnt);
+    Point *stringToPoint(string crdnt);
 
-    double walkDistance(Point* p1, Point* p2);
+    double walkDistance(Point *p1, Point *p2);
 
-    double airDistance(Point* p1, Point* p2);
+    double airDistance(Point *p1, Point *p2);
 
     bool isDig(char c);
 
-    double pathWeight(list<State<Point*>*>* path);
+    double pathWeight(list<State<Point *> *> *path);
 };
 
 

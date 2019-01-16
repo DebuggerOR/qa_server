@@ -1,37 +1,37 @@
-//
-// Created by ori on 1/6/19.
-//
+
 
 #ifndef PROJ2222_STATE_H
 #define PROJ2222_STATE_H
 
 
-template <class T>
+template<class T>
 class State {
     T state;
     double cost;
-    State<T>* cameFrom;
+    State<T> *cameFrom;
 
 public:
     State(T state);
 
-    bool equals(State<T>* s);
+    ~State();
+
+    bool equals(State<T> *s);
 
     int operator<(State state);
 
     double getCost();
 
-    State<T>* getCameFrom();
+    State<T> *getCameFrom();
 
     void setCost(double cost);
 
-    void setCameFrom(State<T>* state);
+    void setCameFrom(State<T> *state);
 
     T getState();
 };
 
 template<class T>
-bool State<T>::equals(State<T>* state) {
+bool State<T>::equals(State<T> *state) {
     return this->state = state->state;
 }
 
@@ -51,23 +51,31 @@ T State<T>::getState() {
 }
 
 template<class T>
-State<T>* State<T>::getCameFrom() {
+State<T> *State<T>::getCameFrom() {
     return this->cameFrom;
 }
 
 template<class T>
-void State<T>::setCameFrom(State<T>* state) {
-    this->cameFrom=state;
+void State<T>::setCameFrom(State<T> *state) {
+    this->cameFrom = state;
 }
 
 template<class T>
 void State<T>::setCost(double cost) {
-    this->cost=cost;
+    this->cost = cost;
 }
 
 template<class T>
 State<T>::State(T state) {
-    this->state=state;
+    this->state = state;
+}
+
+template<class T>
+State<T>::~State() {
+    try {
+        delete this->state;
+    } catch (...) {
+    }
 }
 
 

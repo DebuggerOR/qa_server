@@ -5,8 +5,8 @@
 
 
 class Point {
-int row;
-int col;
+    int row;
+    int col;
 public:
     Point(int row, int col);
 
@@ -18,7 +18,6 @@ public:
 
     int getCol();
 };
-
 
 
 #endif //PROJ2222_POINT_H

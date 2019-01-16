@@ -1,6 +1,4 @@
-//
-// Created by ori on 1/13/19.
-//
+
 
 #include "MyClientHandler.h"
 #include "MatrixCreator.h"
@@ -22,10 +20,10 @@ void MyClientHandler::handleClient(string question, string &answer) {
         Matrix *matrix = matrixCreator.createFromString(question);
 
         Searcher<Point *> *aStar = new AStar<Point *>;
-        auto *solver = new Solver<list<State<Point *> *> *, Searchable<Point *> *>;
-        solver->setSolverImp(aStar);
+        this->solver->setSolverImp(aStar);
 
-        list<State<Point *> *> *traceAStar = solver->solve(matrix);
+        list<State<Point *> *> *traceAStar = this->solver->solve(matrix);
+        delete aStar;
 
         vector<Point *> vec;
         for (auto &l:(*traceAStar)) {
@@ -34,13 +32,17 @@ void MyClientHandler::handleClient(string question, string &answer) {
 
         Utils utils;
         answer = utils.pointsToString(vec);
+
+        delete matrix;
+        delete traceAStar;
+
         this->cm->saveSolution(question, answer);
     }
 }
 
 MyClientHandler::MyClientHandler(CacheManager<string, string> *cm,
                                  Solver<list<State<Point *> *> *, Searchable<Point *> *> *solver) {
-    this->cm=cm;
-    this->solver=solver;
+    this->cm = cm;
+    this->solver = solver;
 }
 

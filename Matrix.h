@@ -10,15 +10,17 @@
 
 using namespace std;
 
-class Matrix : public Searchable<Point*> {
+class Matrix : public Searchable<Point *> {
     int numRows;
     int numCols;
-    State<Point*> *entrance;
-    State<Point*> *exit;
-    vector<vector<State<Point*> *> *> *rows;
+    State<Point *> *entrance;
+    State<Point *> *exit;
+    vector<vector<State<Point *> *> *> *rows;
 
 public:
     Matrix(int rows, int cols);
+
+    ~Matrix();
 
     void fill(vector<int> *ints);
 
@@ -28,11 +30,11 @@ public:
 
     void setGoalState(int row, int col);
 
-    State<Point*> *getInitialState();
+    State<Point *> *getInitialState();
 
-    State<Point*> *getGoalState();
+    State<Point *> *getGoalState();
 
-    list<State<Point*> *> *getAllPossibleStates(State<Point*> *state);
+    list<State<Point *> *> *getAllPossibleStates(State<Point *> *state);
 };
 
 
