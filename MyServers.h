@@ -64,20 +64,23 @@ void parallel(ClientHandler *clientHandler, int new_sock, bool *isRun) {
     cout << "start" << endl;
     string nextBuffer, connectedBuffer;
     char buffer[4096];
+    string strBuff;
 
     *isRun = true;
 
     try {
         while (!parallelStop) {
+            cout<<connectedBuffer<<endl;
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
             connectedBuffer += buffer;
-            if (connectedBuffer[connectedBuffer.size() - 1] != '$') {
-                connectedBuffer += "$";
+            if (connectedBuffer[connectedBuffer.size() - 1] != '\n') {
+                connectedBuffer += "\n";
             }
-            if (!strcmp(buffer, "end")) {
+            string strBuff(connectedBuffer);
+            if (strBuff.find("end")!=string::npos) {
                 string answer;
-                if (connectedBuffer[0] == '$') {
+                if (connectedBuffer[0] == '\n') {
                     connectedBuffer[0] = ' ';
                 }
                 clientHandler->handleClient(connectedBuffer, answer);

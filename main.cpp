@@ -198,7 +198,7 @@ int main(int argc, const char *argv[]) {
 
     //testConsole();
 
-    //testFile("test1");
+    //testFile("graphs50.txt");
 
     //testSerialServer(stoi(argv[1]));
 

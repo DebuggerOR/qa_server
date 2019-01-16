@@ -16,7 +16,7 @@ Matrix *MatrixCreator::createFromConsole() {
         getline(cin, line);
 
         // add '$' after each line
-        input += line + "$";
+        input += line + "\n";
     }
 
     return this->createFromString(input);
@@ -29,15 +29,15 @@ Matrix *MatrixCreator::createFromString(string input) {
 
     // determine height
     for (int i = 1; i < input.size(); ++i) {
-        if (input[i] == '$') {
+        if (input[i] == '\n') {
             ++height;
         }
     }
-    height -= 3;
+    height -= 4;
 
     // determine width
     int j = 0;
-    while (input[j] != '$') {
+    while (input[j] != '\n') {
         if (input[j] == ',') {
             ++width;
         }
@@ -53,7 +53,7 @@ Matrix *MatrixCreator::createFromString(string input) {
     for (int r = 0; r < height; ++r) {
         for (int c = 0; c < width; ++c) {
             num = "";
-            while (input[i] != ',' && input[i] != '$') {
+            while (input[i] != ',' && input[i] != '\n') {
                 if (utils.isDig(input[i]) || input[i] == '-') {
                     num += input[i];
                 }
@@ -73,7 +73,7 @@ Matrix *MatrixCreator::createFromString(string input) {
         ++i;
     }
     ++i;
-    while (input[i] != '$') {
+    while (input[i] != '\n') {
         if (utils.isDig(input[i])) {
             cEntrance += input[i];
         }
@@ -89,7 +89,7 @@ Matrix *MatrixCreator::createFromString(string input) {
         ++i;
     }
     ++i;
-    while (input[i] != '$') {
+    while (input[i] != '\n') {
         if (utils.isDig(input[i])) {
             cExit += input[i];
         }
@@ -109,10 +109,10 @@ Matrix *MatrixCreator::createFromFile(string fileName) {
 
     if (file.is_open()) {
         getline(file, line);
-        input += line + "$";
+        input += line + "\n";
         while (line.find("end") == string::npos) {
             getline(file, line);
-            input += line + "$";
+            input += line + "\n";
         }
         file.close();
     }
