@@ -324,17 +324,17 @@ m10 = [
 
 # Define & connect sockets to server
 s1 = socket(AF_INET, SOCK_STREAM)
-s1.connect(('127.0.0.1', 5100))
+s1.connect(('127.0.0.1', 5108))
 
 # Send matrixes
-for i in range(11):
+for i in range(10):
     to_send = (",".join(map(str,m1[i])) + "\n").encode()
     s1.send(to_send)
 
 # Send start
 s1.send(("0,0" + "\n").encode())
 # Send goal
-s1.send(("10,10" + "\n").encode())
+s1.send(("5,5" + "\n").encode())
 # Send end
 s1.send(("end" + "\n").encode())
 

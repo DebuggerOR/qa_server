@@ -39,14 +39,9 @@ void serial(ClientHandler *clientHandler, int new_sock, bool *isTimeOut) {
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
             connectedBuffer += buffer;
-            if (connectedBuffer[connectedBuffer.size() - 1] != '$') {
-                connectedBuffer += "$";
-            }
-            if (!strcmp(buffer, "end")) {
+            string strBuff(connectedBuffer);
+            if (strBuff.find("end") != string::npos) {
                 string answer;
-                if (connectedBuffer[0] == '$') {
-                    connectedBuffer[0] = ' ';
-                }
                 clientHandler->handleClient(connectedBuffer, answer);
                 const char *cstr = answer.c_str();
                 write(new_sock, cstr, answer.size());
@@ -70,19 +65,12 @@ void parallel(ClientHandler *clientHandler, int new_sock, bool *isRun) {
 
     try {
         while (!parallelStop) {
-            cout<<connectedBuffer<<endl;
             bzero(buffer, 256);
             read(new_sock, buffer, 255);
             connectedBuffer += buffer;
-            if (connectedBuffer[connectedBuffer.size() - 1] != '\n') {
-                connectedBuffer += "\n";
-            }
             string strBuff(connectedBuffer);
             if (strBuff.find("end")!=string::npos) {
                 string answer;
-                if (connectedBuffer[0] == '\n') {
-                    connectedBuffer[0] = ' ';
-                }
                 clientHandler->handleClient(connectedBuffer, answer);
                 const char *cstr = answer.c_str();
                 write(new_sock, cstr, answer.size());

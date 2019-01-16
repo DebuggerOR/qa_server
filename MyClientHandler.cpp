@@ -14,7 +14,6 @@
 void MyClientHandler::handleClient(string question, string &answer) {
     if (this->cm->isSavedSolution(question)) {
         answer = this->cm->getSolution(question);
-
     } else {
         MatrixCreator matrixCreator;
         Matrix *matrix = matrixCreator.createFromString(question);
@@ -25,16 +24,20 @@ void MyClientHandler::handleClient(string question, string &answer) {
         list<State<Point *> *> *traceAStar = this->solver->solve(matrix);
         delete aStar;
 
-        vector<Point *> vec;
-        for (auto &l:(*traceAStar)) {
-            vec.push_back(l->getState());
+        if(traceAStar == nullptr){
+            answer="-1";
+        } else {
+            vector<Point *> vec;
+            for (auto &l:(*traceAStar)) {
+                vec.push_back(l->getState());
+            }
+
+            Utils utils;
+            answer = utils.pointsToString(vec);
+            delete traceAStar;
         }
 
-        Utils utils;
-        answer = utils.pointsToString(vec);
-
         delete matrix;
-        delete traceAStar;
 
         this->cm->saveSolution(question, answer);
     }

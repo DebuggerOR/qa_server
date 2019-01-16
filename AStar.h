@@ -97,6 +97,8 @@ list<State<T> *> *AStar<T>::search(Searchable<T> *searchable) {
         delete adj;
         closedList.push_back(best);
     }
+
+    return nullptr;
 }
 
 

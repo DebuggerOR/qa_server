@@ -54,6 +54,8 @@ list<State<T> *> *DFS<T>::search(Searchable<T> *searchable) {
 
         colors->insert(pair<State<T> *, char>(state, 'b'));
     }
+
+    return nullptr;
 }
 
 

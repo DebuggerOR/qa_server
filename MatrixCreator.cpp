@@ -33,7 +33,7 @@ Matrix *MatrixCreator::createFromString(string input) {
             ++height;
         }
     }
-    height -= 4;
+    height -= 3;
 
     // determine width
     int j = 0;

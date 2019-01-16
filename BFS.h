@@ -43,7 +43,7 @@ list<State<T> *> *BFS<T>::search(Searchable<T> *searchable) {
 
         // if state is goal state
         if (searchable->getGoalState() == state) {
-            delete (colors);
+            delete colors;
             return this->backTrace(state, searchable);
         }
 
@@ -62,6 +62,8 @@ list<State<T> *> *BFS<T>::search(Searchable<T> *searchable) {
     }
 
     delete colors;
+
+    return nullptr;
 }
 
 

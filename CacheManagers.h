@@ -64,20 +64,19 @@ void FileCacheManager<Problem, Solution>::load() {
 
     if (file.is_open()) {
         while (getline(file, line)) {
-            int i = 0;
             string question, answer;
 
-            // question until @
-            while (line[i] != '@') {
-                question += line[i];
-                ++i;
+            // question until $
+            while (line.find("$") == string::npos) {
+                question += line + '\n';
+                getline(file, line);
             }
-            ++i;
+            getline(file, line);
 
-            // answer until end
-            while (i < line.length()) {
-                answer += line[i];
-                ++i;
+            // question until $
+            while (line.find("$") == string::npos) {
+                answer += line;
+                getline(file, line);
             }
 
             this->solutions.insert(pair<string, string>(question, answer));
@@ -97,7 +96,7 @@ void FileCacheManager<Problem, Solution>::save() {
 
     if (file.is_open()) {
         for (auto &qa : this->solutions) {
-            file << qa.first << "@" << qa.second << endl;
+            file << qa.first << "$\n" << qa.second << "\n$" << endl;
         }
         file.close();
     } else {
